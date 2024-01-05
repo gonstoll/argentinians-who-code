@@ -1,3 +1,5 @@
+import {ThemeSwitch} from './action.set-theme'
+
 export function meta() {
   return [
     {title: 'New Remix App'},
@@ -6,5 +8,10 @@ export function meta() {
 }
 
 export default function Index() {
-  return <h1>Hello world!</h1>
+  return (
+    <div>
+      <ThemeSwitch />
+      <h1>Hello world!</h1>
+    </div>
+  )
 }
