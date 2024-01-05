@@ -7,7 +7,7 @@
 From your terminal:
 
 ```sh
-bun run dev
+npm run dev
 ```
 
 This starts your app in development mode, rebuilding assets on file changes.
@@ -17,13 +17,13 @@ This starts your app in development mode, rebuilding assets on file changes.
 First, build your app for production:
 
 ```sh
-bun run build
+npm run build
 ```
 
 Then run the app in production mode:
 
 ```sh
-bun start
+npm start
 ```
 
 Now you'll need to pick a host to deploy it to.

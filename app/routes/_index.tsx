@@ -6,5 +6,5 @@ export function meta() {
 }
 
 export default function Index() {
-  return <div className="mb-0 mt-0 flex">Hello!</div>
+  return <h1>Hello world!</h1>
 }
