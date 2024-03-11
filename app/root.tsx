@@ -1,43 +1,52 @@
-import {cssBundleHref} from '@remix-run/css-bundle'
-import {json, type LoaderFunctionArgs} from '@remix-run/node'
+import type {LoaderFunctionArgs, MetaDescriptor} from '@remix-run/node'
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  json,
+  useLoaderData,
 } from '@remix-run/react'
-import styles from './globals.css'
+import {GeneralErrorBoundary} from './components/error-boundary'
+import styles from './globals.css?url'
+import {cn} from './lib/utils'
+import {ThemeSwitch, useTheme} from './routes/action.set-theme'
 import {ClientHintCheck, getHints} from './utils/client-hints'
-import {getTheme} from './utils/theme.server'
-import {useTheme} from './routes/action.set-theme'
+import {getEnv} from './utils/env.server'
 import {useNonce} from './utils/nonce-provider'
+import {getTheme, type Theme} from './utils/theme.server'
 
 export function links() {
+  return [{rel: 'stylesheet', href: styles}]
+}
+
+export function meta(): Array<MetaDescriptor> {
   return [
-    {rel: 'stylesheet', href: styles},
-    ...(cssBundleHref ? [{rel: 'stylesheet', href: cssBundleHref}] : []),
+    {title: 'Argentinians who code'},
+    {name: 'description', content: 'Argentinians who code'},
   ]
 }
 
 export async function loader({request}: LoaderFunctionArgs) {
   return json({
-    requestInfo: {
-      hints: getHints(request),
-      userPrefs: {
-        theme: getTheme(request),
-      },
-    },
+    hints: getHints(request),
+    theme: getTheme(request),
+    ENV: getEnv(),
   })
 }
 
-export default function App() {
-  const theme = useTheme()
-  const nonce = useNonce()
-
+function Document({
+  theme = 'light',
+  nonce,
+  children,
+}: {
+  theme?: Theme
+  nonce: string
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en" className={theme}>
+    <html lang="en" className={cn(theme, 'h-full')}>
       <head>
         <ClientHintCheck nonce={nonce} />
         <meta charSet="utf-8" />
@@ -49,12 +58,43 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-background text-foreground">
-        <Outlet />
+      <body className="flex h-full flex-col bg-background text-foreground">
+        <ThemeSwitch />
+        {children}
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
+  )
+}
+
+export default function App() {
+  const data = useLoaderData<typeof loader>()
+  const theme = useTheme()
+  const nonce = useNonce()
+
+  return (
+    <Document theme={theme} nonce={nonce}>
+      <main className="flex flex-1 flex-col p-6">
+        <Outlet />
+      </main>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+        }}
+      />
+    </Document>
+  )
+}
+
+export function ErrorBoundary() {
+  const nonce = useNonce()
+
+  return (
+    <Document nonce={nonce}>
+      <main className="flex flex-1 flex-col items-center justify-center">
+        <GeneralErrorBoundary />
+      </main>
+    </Document>
   )
 }

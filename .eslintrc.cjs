@@ -37,9 +37,10 @@ module.exports = {
           {name: 'Link', linkAttribute: 'to'},
           {name: 'NavLink', linkAttribute: 'to'},
         ],
-        'import/resolver': {
-          typescript: {},
-        },
+      },
+      rules: {
+        'jsx-a11y/no-autofocus': 'off',
+        'react/no-unescaped-entities': 'off',
       },
     },
 

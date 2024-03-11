@@ -1,38 +1,19 @@
-# Welcome to Remix!
-
-- [Remix Docs](https://remix.run/docs)
+# BillSplit frontend app
 
 ## Development
 
-From your terminal:
+First, install your dependencies with:
 
-```sh
+```shellscript
+npm install
+```
+
+If you haven't already, copy the `.env.example` file to a new file called `.env`
+and fill in the necessary environment variables. The app won't work without
+these credentials.
+
+Then, start the server in development mode:
+
+```shellscript
 npm run dev
 ```
-
-This starts your app in development mode, rebuilding assets on file changes.
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
