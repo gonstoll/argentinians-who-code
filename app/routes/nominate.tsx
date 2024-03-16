@@ -3,40 +3,9 @@ import {Form} from '@remix-run/react'
 import {Resend} from 'resend'
 import {z} from 'zod'
 import {Button} from '~/components/ui/button'
+import {expertise, provinces} from '~/db/schema.server'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const expertise = [
-  'Frontend Developer',
-  'Backend Developer',
-  'Fullstack Developer',
-  'QA',
-] as const
-const provinces = [
-  'Buenos Aires',
-  'Buenos Aires Capital Federal',
-  'Catamarca',
-  'Chaco',
-  'Chubut',
-  'Córdoba',
-  'Corrientes',
-  'Entre Ríos',
-  'Formosa',
-  'Jujuy',
-  'La Pampa',
-  'La Rioja',
-  'Mendoza',
-  'Misiones',
-  'Neuquen',
-  'Río Negro',
-  'Salta',
-  'San Juan',
-  'San Luís',
-  'Santa Cruz',
-  'Santa Fe',
-  'Santiago del Estero',
-  'Tierra del Fuego',
-  'Tucumán',
-] as const
 const schema = z.object({
   name: z
     .string({required_error: 'Name is required'})
@@ -48,7 +17,10 @@ const schema = z.object({
   }),
   link: z
     .string({required_error: 'Please provide a link'})
-    .url({message: 'Invalid URL'}),
+    .url({message: 'Invalid URL'})
+    .max(200, {
+      message: 'Link should have at most 200 (two hundred) characters',
+    }),
 })
 
 export async function action({request}: LoaderFunctionArgs) {

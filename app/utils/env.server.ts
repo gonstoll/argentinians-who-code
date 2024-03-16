@@ -2,9 +2,19 @@ import {z} from 'zod'
 
 const envVariables = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test'] as const),
+
+  // Resend
   RESEND_API_KEY: z.string().trim().min(1),
   RESEND_ADDRESS_SENDER: z.string().trim().min(1),
   RESEND_ADDRESS_RECEIVER: z.string().trim().min(1),
+
+  // Turso
+  TURSO_DATABASE_URL: z.string().url(),
+  TURSO_DATABASE_AUTH_TOKEN: z.string().optional(),
+
+  // Upstash
+  UPSTASH_REDIS_REST_URL: z.string().url(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().trim().min(1),
 })
 
 declare global {
