@@ -44,3 +44,8 @@ const commonColumns = {
 
 export const devs = sqliteTable('devs', commonColumns)
 export const nominees = sqliteTable('nominees', commonColumns)
+export const users = sqliteTable('users', {
+  id: int('id', {mode: 'number'}).primaryKey({autoIncrement: true}).notNull(),
+  email: text('email').notNull(),
+  password: text('password').notNull(),
+})

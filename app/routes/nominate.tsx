@@ -3,7 +3,7 @@ import {Form} from '@remix-run/react'
 import {Resend} from 'resend'
 import {z} from 'zod'
 import {Button} from '~/components/ui/button'
-import {expertise, provinces} from '~/db/schema.server'
+import {expertise, provinces} from '~/db/schema'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const schema = z.object({

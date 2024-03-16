@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 export default {
-  schema: './drizzle/schema.ts',
+  schema: './app/db/schema.ts',
   out: './drizzle/migrations',
   driver: 'turso',
   dbCredentials: {

@@ -3,6 +3,9 @@ import {z} from 'zod'
 const envVariables = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test'] as const),
 
+  // Auth
+  SESSION_SECRET: z.string().trim().min(1),
+
   // Resend
   RESEND_API_KEY: z.string().trim().min(1),
   RESEND_ADDRESS_SENDER: z.string().trim().min(1),
