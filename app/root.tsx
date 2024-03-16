@@ -11,7 +11,7 @@ import {
 import {GeneralErrorBoundary} from './components/error-boundary'
 import styles from './globals.css?url'
 import {cn} from './lib/utils'
-import {ThemeSwitch, useTheme} from './routes/action.set-theme'
+import {ThemeSwitch, useTheme} from './routes/resources.set-theme'
 import {ClientHintCheck, getHints} from './utils/client-hints'
 import {getEnv} from './utils/env.server'
 import {useNonce} from './utils/nonce-provider'

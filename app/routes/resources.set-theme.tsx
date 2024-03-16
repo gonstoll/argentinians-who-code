@@ -32,7 +32,9 @@ export function useTheme() {
   if (!data) throw new Error('No data found for root route')
 
   const fetchers = useFetchers()
-  const themeFetcher = fetchers.find(f => f.formAction === '/action/set-theme')
+  const themeFetcher = fetchers.find(
+    f => f.formAction === '/resources/set-theme',
+  )
   const optimisticTheme = themeFetcher?.formData?.get('theme')
 
   if (optimisticTheme === 'light' || optimisticTheme === 'dark') {
@@ -48,7 +50,7 @@ export function ThemeSwitch() {
   const fetcher = useFetcher()
 
   function handleThemeChange(theme: Theme) {
-    fetcher.submit({theme}, {method: 'post', action: '/action/set-theme'})
+    fetcher.submit({theme}, {method: 'post', action: '/resources/set-theme'})
   }
 
   return (
