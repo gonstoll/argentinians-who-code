@@ -76,7 +76,11 @@ export async function action({request}: ActionFunctionArgs) {
   const session = await getSession()
   session.set('userId', String(user[0].id))
   return redirect('/admin', {
-    headers: {'set-cookie': await commitSession(session)},
+    headers: {
+      'set-cookie': await commitSession(session, {
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      }),
+    },
   })
 }
 

@@ -8,7 +8,13 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "db:studio": "drizzle-kit studio",
+    "db:studio:dev": "dotenvx run --env-file=.env.development --env-file=.env -- drizzle-kit studio",
+    "db:push": "drizzle-kit push:sqlite",
+    "db:push:dev": "dotenvx run --env-file=.env.development --env-file=.env -- drizzle-kit push:sqlite",
+    "db:seed": "tsx app/db/seed.ts",
+    "db:seed:dev": "dotenvx run --env-file=.env.development --env-file=.env -- bunx tsx app/db/seed.ts"
   },
   "dependencies": {
     "@conform-to/react": "^1.0.4",

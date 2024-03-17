@@ -5,11 +5,11 @@
 First, install your dependencies with:
 
 ```shellscript
-npm install
+bun install
 ```
 
 Then, start the server in development mode:
 
 ```shellscript
-npm run dev
+bun dev
 ```
