@@ -1,5 +1,6 @@
 import type {LoaderFunctionArgs, MetaDescriptor} from '@remix-run/node'
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -9,6 +10,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import {GeneralErrorBoundary} from './components/error-boundary'
+import {Button} from './components/ui/button'
 import styles from './globals.css?url'
 import {cn} from './lib/utils'
 import {ThemeSwitch, useTheme} from './routes/resources.set-theme'
@@ -59,7 +61,21 @@ function Document({
         <Links />
       </head>
       <body className="flex h-full flex-col bg-background text-foreground">
-        <ThemeSwitch />
+        <header className="mx-auto flex w-full max-w-screen-md items-center justify-between p-4">
+          <Link to="/">AWC</Link>
+          <nav className="flex items-center">
+            <ThemeSwitch />
+            <Button variant="link">
+              <Link to="/about">About</Link>
+            </Button>
+            <Button variant="link">
+              <Link to="/nominate">Nominate</Link>
+            </Button>
+            <Button variant="link">
+              <Link to="/donate">Donate</Link>
+            </Button>
+          </nav>
+        </header>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -75,7 +91,7 @@ export default function App() {
 
   return (
     <Document theme={theme} nonce={nonce}>
-      <main className="flex flex-1 flex-col p-6">
+      <main className="mx-auto flex w-full max-w-screen-md flex-1 flex-col p-4">
         <Outlet />
       </main>
       <script
