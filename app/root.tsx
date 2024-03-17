@@ -72,7 +72,13 @@ function Document({
               <Link to="/nominate">Nominate</Link>
             </Button>
             <Button variant="link">
-              <Link to="/donate">Donate</Link>
+              <a
+                href="https://www.buymeacoffee.com/argentinianswhocode"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                Donate
+              </a>
             </Button>
           </nav>
         </header>
