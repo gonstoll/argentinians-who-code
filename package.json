@@ -14,7 +14,8 @@
     "db:push": "drizzle-kit push:sqlite",
     "db:push:dev": "dotenvx run --env-file=.env.development --env-file=.env -- drizzle-kit push:sqlite",
     "db:seed": "tsx app/db/seed.ts",
-    "db:seed:dev": "dotenvx run --env-file=.env.development --env-file=.env -- bunx tsx app/db/seed.ts"
+    "db:seed:dev": "dotenvx run --env-file=.env.development --env-file=.env -- bunx tsx app/db/seed.ts",
+    "setup": "cat .env.example > .env && cat .env.development.example > .env.development"
   },
   "dependencies": {
     "@conform-to/react": "^1.0.4",

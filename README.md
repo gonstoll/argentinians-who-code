@@ -19,9 +19,15 @@ First and foremost, install the project dependencies:
 bun install
 ```
 
-Next, copy the `.env.example` and `.env.development.example` files provided to
-`.env` and `.env.development` filenames respectively. We'll work on those
-together ;)
+Next, run the following command:
+
+```shell
+bun setup
+```
+
+This will simply copy the `.env.example` and `.env.development.example` files
+provided to `.env` and `.env.development` filenames respectively. We'll work on
+those together ;)
 
 Once the `.env` files are in place, install the `turso` CLI tool to interact
 with your database. For that, follow the instructions
