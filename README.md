@@ -13,27 +13,28 @@ Code](https://argentinianswhocode.dev) website.
 
 ## Setup
 
-Copy the `.env.example` and `.env.development.example` files provided to `.env`
-and `.env.development` filenames respectively. We'll work on those together ;)
-
-### Development
-
 First and foremost, install the project dependencies:
 
 ```shell
 bun install
 ```
 
-Next, follow these steps in order to have a working app where you can test
-things out locally.
-
-#### 1. Database
+Next, copy the `.env.example` and `.env.development.example` files provided to
+`.env` and `.env.development` filenames respectively. We'll work on those
+together ;)
 
 Once the `.env` files are in place, install the `turso` CLI tool to interact
 with your database. For that, follow the instructions
 [here](https://docs.turso.tech/cli/introduction).
 
-Once you have the CLI installed, go ahead and create a new local database where
+### Development
+
+Follow these steps in order to have a working app where you can test things out
+locally.
+
+#### 1. Database
+
+With your Turso CLI installed, go ahead and create a new local database where
 you can test things out:
 
 ```bash
@@ -75,7 +76,7 @@ Once that is done, complete the `UPSTASH_REDIS_REST_URL` and
 
 #### 4. Run your app
 
-Once last step before running this app. Create a unique token
+One last step before running this app. Create a unique token
 ([here](https://it-tools.tech/token-generator) for example) and assign it to
 your `SESSION_SECRET` environment variable (in `.env`). This is useful for the
 admin access permissions.
@@ -106,25 +107,33 @@ permissions.
 
 ### Production
 
-Now that the CLI is installed, you need to connect
-[Drizzle](https://orm.drizzle.team) (ORM) with Turso. For that, you need to
-first install the project dependencies with:
+The first thing you need to do is to connect [Drizzle](https://orm.drizzle.team)
+(the ORM) with your remote Turso database. For that, with your Turso CLI
+installed retrieve your Turso credentials by executing:
 
 ```shellscript
-bun install
+turso db show --url {database-name} && turso db tokens create <database-name>
 ```
 
-Once that is done, retrieve your Turso credentials by executing:
-
-```shellscript
-turso db show --url <database-name> && turso db tokens create <database-name>
-```
-
-_Replace `<database-name>` with the name of your database. If you haven't
+_Replace `{database-name}` with the name of your database. If you haven't
 created one, you can do so manually on your account, or use the CLI:_
 
 ```shellscript
-turso db create <database-name>
+turso db create {database-name}
 ```
 
-Now,
+Once you have your credentials, fill in the `TURSO_DATABASE_URL` and
+`TURSO_DATABASE_AUTH_TOKEN` environment variables located in `.env`.
+
+Now that you have your database credentials in place, you can go ahead and push
+your schema to Turso:
+
+```shellscript
+bun db:push
+```
+
+To check that everything is working correctly, run:
+
+```shellscript
+bun db:studio
+```
