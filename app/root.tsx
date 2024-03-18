@@ -62,6 +62,7 @@ function Document({
         <Links />
       </head>
       <body className="flex h-full flex-col bg-background font-mono text-foreground">
+        <Analytics />
         <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between p-4">
           <Link to="/">AWC</Link>
           <nav className="flex items-center">
@@ -86,7 +87,6 @@ function Document({
         {children}
         <ScrollRestoration />
         <Scripts />
-        <Analytics />
       </body>
     </html>
   )
