@@ -64,7 +64,7 @@ export async function loader() {
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
   return (
-    <section className="font-mono">
+    <section>
       <DataTable data={data} />
     </section>
   )

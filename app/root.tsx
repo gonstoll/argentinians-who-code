@@ -61,7 +61,7 @@ function Document({
         <Links />
       </head>
       <body className="flex h-full flex-col bg-background font-mono text-foreground">
-        <header className="mx-auto flex w-full max-w-screen-md items-center justify-between p-4">
+        <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between p-4">
           <Link to="/">AWC</Link>
           <nav className="flex items-center">
             <ThemeSwitch />
@@ -97,7 +97,7 @@ export default function App() {
 
   return (
     <Document theme={theme} nonce={nonce}>
-      <main className="mx-auto flex w-full max-w-screen-md flex-1 flex-col p-4">
+      <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col p-4">
         <Outlet />
       </main>
       <script
