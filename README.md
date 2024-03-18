@@ -37,7 +37,7 @@ locally.
 With your Turso CLI installed, go ahead and create a new local database where
 you can test things out:
 
-```bash
+```shell
 turso dev --db-file local.db
 ```
 
@@ -83,7 +83,7 @@ admin access permissions.
 
 Finally, we are ready to start our app! Start the server in development mode:
 
-```shellscript
+```shell
 bun dev
 ```
 
@@ -111,14 +111,14 @@ The first thing you need to do is to connect [Drizzle](https://orm.drizzle.team)
 (the ORM) with your remote Turso database. For that, with your Turso CLI
 installed retrieve your Turso credentials by executing:
 
-```shellscript
+```shell
 turso db show --url {database-name} && turso db tokens create <database-name>
 ```
 
 _Replace `{database-name}` with the name of your database. If you haven't
 created one, you can do so manually on your account, or use the CLI:_
 
-```shellscript
+```shell
 turso db create {database-name}
 ```
 
@@ -128,12 +128,12 @@ Once you have your credentials, fill in the `TURSO_DATABASE_URL` and
 Now that you have your database credentials in place, you can go ahead and push
 your schema to Turso:
 
-```shellscript
+```shell
 bun db:push
 ```
 
 To check that everything is working correctly, run:
 
-```shellscript
+```shell
 bun db:studio
 ```
