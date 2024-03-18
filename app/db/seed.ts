@@ -22,7 +22,7 @@ const db = drizzle(client)
 
 function generateDev(): Omit<DevTable, 'id'> {
   return {
-    name: faker.internet.userName(),
+    name: faker.person.fullName(),
     expertise: faker.helpers.arrayElement(expertise),
     from: faker.helpers.arrayElement(provinces),
     link: faker.internet.url(),
