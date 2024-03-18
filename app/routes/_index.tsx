@@ -28,17 +28,7 @@ export const columns: Array<ColumnDef<Dev>> = [
     header: 'Expertise',
     cell: ({getValue}) => {
       const expertise = getValue<Expertise>()
-      const expertiseMap = {
-        frontend: 'default',
-        backend: 'secondary',
-        fullstack: 'destructive',
-        qa: 'outline',
-      } as const
-      return (
-        <Badge variant={expertiseMap[expertise]}>
-          • {expertise.toLowerCase()}
-        </Badge>
-      )
+      return <Badge variant={expertise}>• {expertise.toLowerCase()}</Badge>
     },
   },
   {

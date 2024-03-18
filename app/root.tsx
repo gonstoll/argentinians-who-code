@@ -11,7 +11,7 @@ import {
 } from '@remix-run/react'
 import {Analytics} from '@vercel/analytics/react'
 import {GeneralErrorBoundary} from './components/error-boundary'
-import {Button} from './components/ui/button'
+import {buttonVariants} from './components/ui/button'
 import styles from './globals.css?url'
 import {cn} from './lib/utils'
 import {ThemeSwitch, useTheme} from './routes/resources.set-theme'
@@ -67,21 +67,20 @@ function Document({
           <Link to="/">AWC</Link>
           <nav className="flex items-center">
             <ThemeSwitch />
-            <Button variant="link">
-              <Link to="/about">About</Link>
-            </Button>
-            <Button variant="link">
-              <Link to="/nominate">Nominate</Link>
-            </Button>
-            <Button variant="link">
-              <a
-                href="https://www.buymeacoffee.com/argentinianswhocode"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                Donate
-              </a>
-            </Button>
+            <Link to="/about" className={buttonVariants({variant: 'link'})}>
+              About
+            </Link>
+            <Link to="/nominate" className={buttonVariants({variant: 'link'})}>
+              Nominate
+            </Link>
+            <a
+              href="https://www.buymeacoffee.com/argentinianswhocode"
+              target="_blank"
+              rel="noreferrer noopener"
+              className={buttonVariants({variant: 'link'})}
+            >
+              Donate
+            </a>
           </nav>
         </header>
         {children}

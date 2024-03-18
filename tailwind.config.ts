@@ -52,6 +52,22 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        frontend: {
+          DEFAULT: 'hsl(var(--frontend))',
+          foreground: 'hsl(var(--frontend-foreground))',
+        },
+        backend: {
+          DEFAULT: 'hsl(var(--backend))',
+          foreground: 'hsl(var(--backend-foreground))',
+        },
+        fullstack: {
+          DEFAULT: 'hsl(var(--fullstack))',
+          foreground: 'hsl(var(--fullstack-foreground))',
+        },
+        qa: {
+          DEFAULT: 'hsl(var(--qa))',
+          foreground: 'hsl(var(--qa-foreground))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -78,4 +94,3 @@ const config = {
 } satisfies Config
 
 export default config
-

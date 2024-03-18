@@ -33,6 +33,18 @@
     --ring: 20 14.3% 4.1%;
 
     --radius: 0.5rem;
+
+    --frontend: 0 72.2% 50.6%;
+    --frontend-foreground: 0 85.7% 97.3%;
+
+    --backend: 142.1 76.2% 36.3%;
+    --backend-foreground: 355.7 100% 97.3%;
+
+    --fullstack: 262.1 83.3% 57.8%;
+    --fullstack-foreground: 210 20% 98%;
+
+    --qa: 47.9 95.8% 53.1%;
+    --qa-foreground: 26 83.3% 14.1%;
   }
 
   .dark {
@@ -63,6 +75,21 @@
     --border: 12 6.5% 15.1%;
     --input: 12 6.5% 15.1%;
     --ring: 24 5.7% 82.9%;
+
+    /* --frontend: 0 72.2% 50.6%; */
+    /* --frontend-foreground: 0 85.7% 97.3%; */
+    --frontend: 0 90.6% 70.8%;
+
+    /* --backend: 142.1 70.6% 45.3%; */
+    /* --backend-foreground: 144.9 80.4% 10%; */
+    --backend: 142 69.1% 58%;
+
+    /* --fullstack: 263.4 70% 50.4%; */
+    /* --fullstack-foreground: 210 20% 98%; */
+    --fullstack: 234 89.4% 73.9%;
+
+    --qa: 47.9 95.8% 53.1%;
+    --qa-foreground: 26 83.3% 14.1%;
   }
 }
 
@@ -74,4 +101,3 @@
     @apply bg-background text-foreground;
   }
 }
-

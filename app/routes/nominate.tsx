@@ -10,10 +10,12 @@ import {json, type LoaderFunctionArgs} from '@remix-run/node'
 import {Form, useActionData, useNavigation} from '@remix-run/react'
 import {AlertCircle, Loader2} from 'lucide-react'
 import {Resend} from 'resend'
+import {useSpinDelay} from 'spin-delay'
 import {z} from 'zod'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
 import {ErrorList} from '~/components/error-list'
 import {Alert, AlertDescription, AlertTitle} from '~/components/ui/alert'
+import {Badge} from '~/components/ui/badge'
 import {Button} from '~/components/ui/button'
 import {Input} from '~/components/ui/input'
 import {Label} from '~/components/ui/label'
@@ -27,7 +29,6 @@ import {
 import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {expertise, nominees, provinces} from '~/db/schema'
-import {useSpinDelay} from 'spin-delay'
 
 const schema = z.object({
   name: z
@@ -201,7 +202,7 @@ export default function Nominate() {
             <SelectContent>
               {expertise.map(p => (
                 <SelectItem key={p} value={p}>
-                  {p}
+                  <Badge variant={p}>{p}</Badge>
                 </SelectItem>
               ))}
             </SelectContent>
