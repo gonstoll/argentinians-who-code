@@ -3,6 +3,19 @@
 This is the source code for the [Argentinians Who
 Code](https://argentinianswhocode.dev) website.
 
+## Forking this project
+
+The code in this repository is open source with the sole purpose of helping out
+those who want to create something similar for professionals in their own
+country. Feel absolutely free to grab what you need from here and use it as your
+own. If you do so, please consider giving this project a shoutout on your repo,
+website or any of your social media platforms. That would be immensely
+appreciated!
+
+I have carefully detailed all the instructions you need to get this project up
+and running, but in case you need any help or have any questions just reach out
+to me! I'm always happy to help out.
+
 ## Requirements
 
 - [Bun](https://bun.sh) (recommended)
