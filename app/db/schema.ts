@@ -1,13 +1,7 @@
 import type {InferSelectModel} from 'drizzle-orm'
 import {int, sqliteTable, text} from 'drizzle-orm/sqlite-core'
 
-export const expertise = [
-  'Frontend Developer',
-  'Backend Developer',
-  'Fullstack Developer',
-  'QA',
-] as const
-
+export const expertise = ['frontend', 'backend', 'fullstack', 'qa'] as const
 export const provinces = [
   'Buenos Aires',
   'Buenos Aires Capital Federal',
@@ -52,3 +46,4 @@ export const users = sqliteTable('users', {
 })
 
 export type DevTable = InferSelectModel<typeof devs>
+export type Expertise = (typeof expertise)[number]

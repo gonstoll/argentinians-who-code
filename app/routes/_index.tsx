@@ -18,11 +18,7 @@ import {
 } from '~/components/ui/table'
 import {db} from '~/db'
 import type {DevTable} from '~/db/schema'
-import {devs} from '~/db/schema'
-
-function renderExpertise(expertise: DevTable['expertise']) {
-  return <Badge variant="default">{expertise}</Badge>
-}
+import {devs, type Expertise} from '~/db/schema'
 
 export const columns: Array<ColumnDef<DevTable>> = [
   {accessorKey: 'name', header: 'Name'},
@@ -30,7 +26,20 @@ export const columns: Array<ColumnDef<DevTable>> = [
   {
     accessorKey: 'expertise',
     header: 'Expertise',
-    cell: row => renderExpertise(row.getValue<DevTable['expertise']>()),
+    cell: ({getValue}) => {
+      const expertise = getValue<Expertise>()
+      const expertiseMap = {
+        frontend: 'default',
+        backend: 'secondary',
+        fullstack: 'destructive',
+        qa: 'outline',
+      } as const
+      return (
+        <Badge variant={expertiseMap[expertise]}>
+          • {expertise.toLowerCase()}
+        </Badge>
+      )
+    },
   },
   {
     accessorKey: 'link',
