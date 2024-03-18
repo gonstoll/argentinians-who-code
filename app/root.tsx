@@ -60,7 +60,7 @@ function Document({
         <Meta />
         <Links />
       </head>
-      <body className="flex h-full flex-col bg-background text-foreground">
+      <body className="flex h-full flex-col bg-background font-mono text-foreground">
         <header className="mx-auto flex w-full max-w-screen-md items-center justify-between p-4">
           <Link to="/">AWC</Link>
           <nav className="flex items-center">

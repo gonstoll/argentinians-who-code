@@ -17,10 +17,10 @@ import {
   TableRow,
 } from '~/components/ui/table'
 import {db} from '~/db'
-import type {DevTable} from '~/db/schema'
+import type {Dev} from '~/db/schema'
 import {devs, type Expertise} from '~/db/schema'
 
-export const columns: Array<ColumnDef<DevTable>> = [
+export const columns: Array<ColumnDef<Dev>> = [
   {accessorKey: 'name', header: 'Name'},
   {accessorKey: 'from', header: 'From'},
   {
@@ -64,13 +64,13 @@ export async function loader() {
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
   return (
-    <section>
+    <section className="font-mono">
       <DataTable data={data} />
     </section>
   )
 }
 
-function DataTable({data}: {data: Array<DevTable>}) {
+function DataTable({data}: {data: Array<Dev>}) {
   const table = useReactTable({
     data,
     columns,

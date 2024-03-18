@@ -38,12 +38,16 @@ const commonColumns = {
 }
 
 export const devs = sqliteTable('devs', commonColumns)
-export const nominees = sqliteTable('nominees', commonColumns)
+export const nominees = sqliteTable('nominees', {
+  ...commonColumns,
+  reason: text('reason', {length: 300}).notNull(),
+})
 export const users = sqliteTable('users', {
   id: int('id', {mode: 'number'}).primaryKey({autoIncrement: true}).notNull(),
   email: text('email').notNull(),
   password: text('password').notNull(),
 })
 
-export type DevTable = InferSelectModel<typeof devs>
+export type Dev = InferSelectModel<typeof devs>
+export type Nominee = InferSelectModel<typeof nominees>
 export type Expertise = (typeof expertise)[number]

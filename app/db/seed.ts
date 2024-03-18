@@ -4,12 +4,13 @@ import bcrypt from 'bcryptjs'
 import * as dotenv from 'dotenv'
 import {drizzle} from 'drizzle-orm/libsql'
 import {
+  type Nominee,
   devs,
   expertise,
   nominees,
   provinces,
   users,
-  type DevTable,
+  type Dev,
 } from './schema'
 
 dotenv.config()
@@ -20,12 +21,23 @@ const client = createClient({
 })
 const db = drizzle(client)
 
-function generateDev(): Omit<DevTable, 'id'> {
+function generateDev(): Omit<Dev, 'id'> {
   return {
     name: faker.person.fullName(),
     expertise: faker.helpers.arrayElement(expertise),
     from: faker.helpers.arrayElement(provinces),
     link: faker.internet.url(),
+  }
+}
+
+function generateNominee(): Omit<Nominee, 'id'> {
+  // Reason that is 200 characters long
+  const reason = Array.from({length: 40})
+    .map(() => faker.lorem.word({length: 4}))
+    .join(' ')
+  return {
+    ...generateDev(),
+    reason,
   }
 }
 
@@ -63,7 +75,7 @@ async function seedDevs() {
 
 async function seedNominees() {
   console.log('🌱 Seeding nominees...')
-  const fakeNominees = faker.helpers.multiple(generateDev, {count: 10})
+  const fakeNominees = faker.helpers.multiple(generateNominee, {count: 10})
   await db.insert(nominees).values(fakeNominees)
   console.log('✅ Nominees seeded')
 }
