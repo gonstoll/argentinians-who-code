@@ -3,6 +3,8 @@ import * as dotenv from 'dotenv'
 
 dotenv.config()
 
+console.log('logging env (drizzle config): ', process.env)
+
 export default {
   schema: './app/db/schema.ts',
   out: './drizzle/migrations',

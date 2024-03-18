@@ -9,6 +9,7 @@ import {
   json,
   useLoaderData,
 } from '@remix-run/react'
+import {Analytics} from '@vercel/analytics/react'
 import {GeneralErrorBoundary} from './components/error-boundary'
 import {Button} from './components/ui/button'
 import styles from './globals.css?url'
@@ -85,6 +86,7 @@ function Document({
         {children}
         <ScrollRestoration />
         <Scripts />
+        <Analytics />
       </body>
     </html>
   )

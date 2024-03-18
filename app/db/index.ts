@@ -3,6 +3,8 @@ import {Ratelimit} from '@upstash/ratelimit'
 import {Redis} from '@upstash/redis'
 import {drizzle} from 'drizzle-orm/libsql'
 
+console.log('logging env: ', process.env)
+
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL,
   authToken: process.env.TURSO_AUTH_TOKEN,
