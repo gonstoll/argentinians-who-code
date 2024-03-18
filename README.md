@@ -30,7 +30,7 @@ provided to `.env` and `.env.development` filenames respectively. We'll work on
 those together ;)
 
 Once the `.env` files are in place, install the `turso` CLI tool to interact
-with your database. For that, follow the instructions
+with your database. For that, follow the instructions detailed
 [here](https://docs.turso.tech/cli/introduction).
 
 ### Development
@@ -113,9 +113,10 @@ permissions.
 
 ### Production
 
-The first thing you need to do is to connect [Drizzle](https://orm.drizzle.team)
-(the ORM) with your remote Turso database. For that, with your Turso CLI
-installed retrieve your Turso credentials by executing:
+The first thing you'd need to do is to connect
+[Drizzle](https://orm.drizzle.team) (the ORM) with your remote Turso database.
+For that, with your Turso CLI installed, retrieve your Turso credentials by
+executing:
 
 ```shell
 turso db show --url {database-name} && turso db tokens create {database-name}

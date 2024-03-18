@@ -1,8 +1,16 @@
+import {faker} from '@faker-js/faker'
 import {createClient} from '@libsql/client'
 import bcrypt from 'bcryptjs'
 import * as dotenv from 'dotenv'
 import {drizzle} from 'drizzle-orm/libsql'
-import {devs, users} from './schema'
+import {
+  devs,
+  expertise,
+  nominees,
+  provinces,
+  users,
+  type DevTable,
+} from './schema'
 
 dotenv.config()
 
@@ -12,10 +20,20 @@ const client = createClient({
 })
 const db = drizzle(client)
 
+function generateDev(): Omit<DevTable, 'id'> {
+  return {
+    name: faker.internet.userName(),
+    expertise: faker.helpers.arrayElement(expertise),
+    from: faker.helpers.arrayElement(provinces),
+    link: faker.internet.url(),
+  }
+}
+
 async function dbTeardown() {
   console.log('🔥 Dropping tables...')
   await db.delete(devs).all()
   await db.delete(users).all()
+  await db.delete(nominees).all()
   console.log('✅ Tables dropped')
 }
 
@@ -38,27 +56,22 @@ async function seedAdmin() {
 
 async function seedDevs() {
   console.log('🌱 Seeding devs...')
-  await db.insert(devs).values([
-    {
-      name: 'Gonzalo Stoll',
-      from: 'Córdoba',
-      expertise: 'frontend',
-      link: 'https://gonzalostoll.com',
-    },
-    // Generate 20 more devs with random data
-    ...Array.from({length: 20}, (_, i) => ({
-      name: `Dev ${i}`,
-      from: 'Córdoba' as const,
-      expertise: 'frontend' as const,
-      link: `https://dev${i}.com`,
-    })),
-  ])
+  const fakeDevs = faker.helpers.multiple(generateDev, {count: 40})
+  await db.insert(devs).values(fakeDevs)
   console.log('✅ Devs seeded')
+}
+
+async function seedNominees() {
+  console.log('🌱 Seeding nominees...')
+  const fakeNominees = faker.helpers.multiple(generateDev, {count: 10})
+  await db.insert(nominees).values(fakeNominees)
+  console.log('✅ Nominees seeded')
 }
 
 async function seed() {
   await dbTeardown()
   await seedAdmin()
+  await seedNominees()
   await seedDevs()
 }
 
