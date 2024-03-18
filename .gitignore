@@ -5,7 +5,7 @@ node_modules
 /build
 /public/build
 .env*
-!.env.example
+!.env.*example
 
 # drizzle
 *.db*

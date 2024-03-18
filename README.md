@@ -1,15 +1,130 @@
 # Argentinians Who Code (AWC)
 
-## Development
+This is the source code for the [Argentinians Who
+Code](https://argentinianswhocode.dev) website.
 
-First, install your dependencies with:
+## Requirements
+
+- [Bun](https://bun.sh) (recommended)
+- [Dotenvx](https://dotenvx.com/) (required)
+- [Turso](https://turso.tech) (required)
+- [Resend](https://resend.com/overview) (required)
+- [Upstash](https://upstash.com) (required)
+
+## Setup
+
+Copy the `.env.example` and `.env.development.example` files provided to `.env`
+and `.env.development` filenames respectively. We'll work on those together ;)
+
+### Development
+
+First and foremost, install the project dependencies:
+
+```shell
+bun install
+```
+
+Next, follow these steps in order to have a working app where you can test
+things out locally.
+
+#### 1. Database
+
+Once the `.env` files are in place, install the `turso` CLI tool to interact
+with your database. For that, follow the instructions
+[here](https://docs.turso.tech/cli/introduction).
+
+Once you have the CLI installed, go ahead and create a new local database where
+you can test things out:
+
+```bash
+turso dev --db-file local.db
+```
+
+This will start a local libSQL server and create a database for you. It will
+create a couple of files on your root folder. Don't worry about those :) you can
+learn more about that [here](https://docs.turso.tech/local-development).
+
+Now that we have a local database, let's push our schema and seed our database!
+For that to work properly, make sure to install [dotenvx](https://dotenvx.com)
+globally on your machine. Then, run:
+
+```shell
+bun db:push:dev && bun db:seed:dev
+```
+
+Amazing! Now we have a working database filled with data. Go ahead and run this
+to see things in motion:
+
+```shell
+bun db:studio:dev
+```
+
+#### 2. Resend
+
+This project uses [Resend](https://resend.com) to send email notifications
+everytime there's a new nominee. Create an account there and fill in the
+`RESEND_API_KEY` environment variable located on your `.env` file.
+
+#### 3. Upstash
+
+AWC also uses an [Upstash](https://upstash.com) Redis database to handle rate
+limiting. Make sure to setup an account there, and create a new Redis database.
+
+Once that is done, complete the `UPSTASH_REDIS_REST_URL` and
+`UPSTASH_REDIS_REST_TOKEN` environment variables in your `.env` file.
+
+#### 4. Run your app
+
+Once last step before running this app. Create a unique token
+([here](https://it-tools.tech/token-generator) for example) and assign it to
+your `SESSION_SECRET` environment variable (in `.env`). This is useful for the
+admin access permissions.
+
+Finally, we are ready to start our app! Start the server in development mode:
+
+```shellscript
+bun dev
+```
+
+#### Admin
+
+This app is structured around the idea of a main admin person who's responsible
+of receiving nominees requests, approving them and many other extraordinary
+tasks:
+
+- Approve nominees
+- Reject nominees
+- Edit approved nominees (hereunder referred to as "devs")
+- Delete devs
+
+You might've noticed that on your `.env.development` file there's an
+`ADMIN_EMAIL` and a `ADMIN_PASSWORD` variable. With your dev server running,
+head over to [http://localhost:5173/login](http://localhost:5173/login) and
+input those same values. Once that is done, you should notice that you're
+redirected to `/admin` URL, where you as an admin can excersie your appointed
+permissions.
+
+### Production
+
+Now that the CLI is installed, you need to connect
+[Drizzle](https://orm.drizzle.team) (ORM) with Turso. For that, you need to
+first install the project dependencies with:
 
 ```shellscript
 bun install
 ```
 
-Then, start the server in development mode:
+Once that is done, retrieve your Turso credentials by executing:
 
 ```shellscript
-bun dev
+turso db show --url <database-name> && turso db tokens create <database-name>
 ```
+
+_Replace `<database-name>` with the name of your database. If you haven't
+created one, you can do so manually on your account, or use the CLI:_
+
+```shellscript
+turso db create <database-name>
+```
+
+Now,
