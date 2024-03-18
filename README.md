@@ -112,7 +112,7 @@ The first thing you need to do is to connect [Drizzle](https://orm.drizzle.team)
 installed retrieve your Turso credentials by executing:
 
 ```shell
-turso db show --url {database-name} && turso db tokens create <database-name>
+turso db show --url {database-name} && turso db tokens create {database-name}
 ```
 
 _Replace `{database-name}` with the name of your database. If you haven't
