@@ -12,6 +12,22 @@ own. If you do so, please consider giving this project a shoutout on your repo,
 website or any of your social media platforms. That would be immensely
 appreciated!
 
+This project is deployed to [vercel](https://vercel.com) and built with:
+
+- [Remix](https://remix.run)
+- [Typescript](https://www.typescriptlang.org)
+- [Tailwind](https://tailwindcss.com)
+- [shadcn/ui](https://ui.shadcn.com)
+- [zod](https://zod.dev)
+- [Conform](https://conform.guide)
+- [Drizzle](https://orm.drizzle.team)
+- [Bun](https://bun.sh)
+- [Dotenvx](https://dotenvx.com)
+- [Turso](https://turso.tech)
+- [Resend](https://resend.com/overview)
+- [Upstash](https://upstash.com)
+- ... and many other amazing tools!
+
 I have carefully detailed all the instructions you need to get this project up
 and running, but in case you need any help or have any questions just reach out
 to me! I'm always happy to help out.
@@ -157,3 +173,9 @@ To check that everything is working correctly, run:
 ```shell
 bun db:studio
 ```
+
+## Acknowledgements
+
+Great inspiration for this project was taken from the [Argentinians Who
+Design](https://argentinianswho.design) website, which in turn is a fork of the
+[Brazilians Who Design](https://github.com/zehfernandes/brazilianswhodesign).
