@@ -12,9 +12,7 @@ import {destroySession, getSession} from '~/utils/session.server'
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get('cookie'))
   const userId = session.get('userId')
-  if (!userId) {
-    return redirect('/')
-  }
+  if (!userId) return redirect('/')
   return json({})
 }
 
