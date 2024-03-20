@@ -1,4 +1,8 @@
-import type {LoaderFunctionArgs, MetaDescriptor} from '@remix-run/node'
+import type {
+  LinkDescriptor,
+  LoaderFunctionArgs,
+  MetaDescriptor,
+} from '@remix-run/node'
 import {
   Link,
   Links,
@@ -20,8 +24,20 @@ import {getEnv} from './utils/env.server'
 import {useNonce} from './utils/nonce-provider'
 import {getTheme, type Theme} from './utils/theme.server'
 
-export function links() {
-  return [{rel: 'stylesheet', href: styles}]
+export function links(): Array<LinkDescriptor> {
+  return [
+    {rel: 'stylesheet', href: styles},
+    {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.gstatic.com',
+      crossOrigin: 'anonymous',
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400..800&display=swap',
+    },
+  ]
 }
 
 export function meta(): Array<MetaDescriptor> {

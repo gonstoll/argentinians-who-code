@@ -10,6 +10,20 @@ const config = {
   ],
   prefix: '',
   theme: {
+    fontFamily: {
+      mono: [
+        'JetBrains Mono',
+        'Fira Code',
+        'ui-monospace',
+        'SFMono-Regular',
+        'Menlo',
+        'Monaco',
+        'Consolas',
+        'Liberation Mono',
+        'Courier New',
+        'monospace',
+      ],
+    },
     container: {
       center: true,
       padding: '2rem',
