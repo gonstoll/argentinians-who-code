@@ -26,7 +26,7 @@ export const columns: Array<ColumnDef<Dev>> = [
   {
     accessorKey: 'expertise',
     header: 'Expertise',
-    cell: ({getValue}) => {
+    cell({getValue}) {
       const expertise = getValue<Expertise>()
       return <Badge variant={expertise}>• {expertise.toLowerCase()}</Badge>
     },
@@ -34,12 +34,10 @@ export const columns: Array<ColumnDef<Dev>> = [
   {
     accessorKey: 'link',
     header: '',
-    cell: ({row}) => {
+    cell() {
       return (
         <div className="flex justify-end">
-          <a href={row.getValue('link')} target="_blank" rel="noreferrer">
-            <MoveRight className="h-4 w-4" />
-          </a>
+          <MoveRight className="h-4 w-4" />
         </div>
       )
     },
@@ -97,7 +95,13 @@ function DataTable({data}: {data: Array<Dev>}) {
             >
               {row.getVisibleCells().map(cell => (
                 <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <a
+                    className="block p-4"
+                    href={row.getValue('link')}
+                    rel="noreferrer"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </a>
                 </TableCell>
               ))}
             </TableRow>

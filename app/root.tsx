@@ -43,7 +43,16 @@ export function links(): Array<LinkDescriptor> {
 export function meta(): Array<MetaDescriptor> {
   return [
     {title: 'Argentinians who code'},
-    {name: 'description', content: 'Argentinians who code'},
+    {
+      name: 'description',
+      content:
+        'Argentinians who code is a place to showcase the work of Argentinian developers and engineers. We are a community of people who are passionate about technology, here to celebrate the work of our peers and to help them get the recognition they deserve.',
+    },
+    {
+      name: 'keywords',
+      content:
+        'argentina, developers, engineers, technology, community, engineer',
+    },
   ]
 }
 

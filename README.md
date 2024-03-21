@@ -122,6 +122,18 @@ Finally, we are ready to start our app! Start the server in development mode:
 bun dev
 ```
 
+So from now on, everytime you need to run your app, first run
+
+```shell
+turso dev --db-file local.db
+```
+
+and then on another terminal window, run
+
+```shell
+bun dev
+```
+
 #### Admin
 
 This app is structured around the idea of a main admin person who's responsible
