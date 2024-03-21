@@ -1,4 +1,4 @@
-import {json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {useLoaderData, useSearchParams} from '@remix-run/react'
 import {
   flexRender,
@@ -10,6 +10,7 @@ import {
   type ColumnFiltersState,
   type SortingState,
 } from '@tanstack/react-table'
+import {inArray} from 'drizzle-orm'
 import {ArrowUpDown, MoveRight} from 'lucide-react'
 import * as React from 'react'
 import {Badge} from '~/components/ui/badge'
@@ -73,8 +74,14 @@ export const columns: Array<ColumnDef<Dev>> = [
   },
 ]
 
-export async function loader() {
-  const data = await db.select().from(devs).all()
+export async function loader({request}: LoaderFunctionArgs) {
+  const url = new URL(request.url)
+  const query = url.searchParams.getAll('expertise') as Array<Expertise>
+  const data = await db
+    .select()
+    .from(devs)
+    .where(inArray(devs.expertise, query.length ? query : [...expertise]))
+    .all()
   return json({data})
 }
 
