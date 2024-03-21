@@ -1,13 +1,11 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {json, type LoaderFunctionArgs} from '@remix-run/node'
 import {useLoaderData, useSearchParams} from '@remix-run/react'
 import {
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
   type ColumnDef,
-  type ColumnFiltersState,
   type SortingState,
 } from '@tanstack/react-table'
 import {inArray} from 'drizzle-orm'
@@ -28,9 +26,10 @@ import {devs, expertise, type Expertise} from '~/db/schema'
 import {classNames} from '~/utils/misc'
 
 export const columns: Array<ColumnDef<Dev>> = [
-  {accessorKey: 'name', header: 'Name'},
+  {accessorKey: 'name', size: 130, header: 'Name'},
   {
     accessorKey: 'from',
+    size: 150,
     header({column}) {
       return (
         <button
@@ -44,6 +43,7 @@ export const columns: Array<ColumnDef<Dev>> = [
   },
   {
     accessorKey: 'expertise',
+    size: 130,
     header({column}) {
       return (
         <button
@@ -62,6 +62,7 @@ export const columns: Array<ColumnDef<Dev>> = [
   {
     accessorKey: 'link',
     header: '',
+    size: 50,
     cell({row}) {
       return (
         <div className="flex justify-end">
@@ -92,8 +93,8 @@ export default function Index() {
   function handleSearchParams(expertise: Expertise[number]) {
     setSearchParams(
       prev => {
-        const foo = prev.getAll('expertise')
-        if (foo.includes(expertise)) {
+        const expertiseParams = prev.getAll('expertise')
+        if (expertiseParams.includes(expertise)) {
           prev.delete('expertise', expertise)
           return prev
         }
@@ -106,8 +107,8 @@ export default function Index() {
 
   return (
     <section>
-      <div className="float-right mb-4 inline-block">
-        <div className="flex items-center gap-4 rounded-md border border-foreground p-4">
+      <div className="mb-4 inline-block md:float-right">
+        <div className="m:p-4 flex flex-wrap items-center gap-1 rounded-md border border-border px-2 py-4 md:gap-2">
           {expertise.map(e => {
             const expertiseSearchParams = searchParams.getAll('expertise')
             const isActive =
@@ -135,18 +136,13 @@ export default function Index() {
 
 function DataTable({data}: {data: Array<Dev>}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  )
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {sorting, columnFilters},
+    state: {sorting},
   })
 
   return (
@@ -156,7 +152,11 @@ function DataTable({data}: {data: Array<Dev>}) {
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map(header => {
               return (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  style={{width: header.getSize()}}
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
