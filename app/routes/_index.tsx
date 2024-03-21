@@ -1,11 +1,13 @@
 import {json} from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
+import {useLoaderData, useSearchParams} from '@remix-run/react'
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
   type ColumnDef,
+  type ColumnFiltersState,
   type SortingState,
 } from '@tanstack/react-table'
 import {ArrowUpDown, MoveRight} from 'lucide-react'
@@ -21,7 +23,8 @@ import {
 } from '~/components/ui/table'
 import {db} from '~/db'
 import type {Dev} from '~/db/schema'
-import {devs, type Expertise} from '~/db/schema'
+import {devs, expertise, type Expertise} from '~/db/schema'
+import {classNames} from '~/utils/misc'
 
 export const columns: Array<ColumnDef<Dev>> = [
   {accessorKey: 'name', header: 'Name'},
@@ -77,8 +80,47 @@ export async function loader() {
 
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  function handleSearchParams(expertise: Expertise[number]) {
+    setSearchParams(
+      prev => {
+        const foo = prev.getAll('expertise')
+        if (foo.includes(expertise)) {
+          prev.delete('expertise', expertise)
+          return prev
+        }
+        prev.append('expertise', expertise)
+        return prev
+      },
+      {preventScrollReset: true},
+    )
+  }
+
   return (
     <section>
+      <div className="float-right mb-4 inline-block">
+        <div className="flex items-center gap-4 rounded-md border border-foreground p-4">
+          {expertise.map(e => {
+            const expertiseSearchParams = searchParams.getAll('expertise')
+            const isActive =
+              expertiseSearchParams.includes(e) || !expertiseSearchParams.length
+
+            return (
+              <Badge
+                key={e}
+                variant={e}
+                className={classNames('cursor-pointer opacity-40', {
+                  'opacity-100': isActive,
+                })}
+                onClick={() => handleSearchParams(e)}
+              >
+                • {e.toLowerCase()}
+              </Badge>
+            )
+          })}
+        </div>
+      </div>
       <DataTable data={data} />
     </section>
   )
@@ -86,13 +128,18 @@ export default function Index() {
 
 function DataTable({data}: {data: Array<Dev>}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  )
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    state: {sorting},
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {sorting, columnFilters},
   })
 
   return (

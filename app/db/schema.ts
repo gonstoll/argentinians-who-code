@@ -1,5 +1,5 @@
-import type {InferSelectModel} from 'drizzle-orm'
-import {int, sqliteTable, text} from 'drizzle-orm/sqlite-core'
+import {sql, type InferSelectModel} from 'drizzle-orm'
+import {integer, sqliteTable, text} from 'drizzle-orm/sqlite-core'
 
 export const expertise = ['frontend', 'backend', 'fullstack', 'qa'] as const
 export const provinces = [
@@ -30,20 +30,23 @@ export const provinces = [
 ] as const
 
 const commonColumns = {
-  id: int('id', {mode: 'number'}).primaryKey({autoIncrement: true}).notNull(),
+  id: integer('id', {mode: 'number'})
+    .primaryKey({autoIncrement: true})
+    .notNull(),
   name: text('name').notNull(),
   from: text('from', {enum: provinces}).notNull(),
   expertise: text('expertise', {enum: expertise}).notNull(),
   link: text('link', {length: 200}).notNull(),
+  reason: text('reason', {length: 300}).notNull(),
+  createdAt: text('createdAt').default(sql`CURRENT_TIMESTAMP`),
 }
 
 export const devs = sqliteTable('devs', commonColumns)
-export const nominees = sqliteTable('nominees', {
-  ...commonColumns,
-  reason: text('reason', {length: 300}).notNull(),
-})
+export const nominees = sqliteTable('nominees', commonColumns)
 export const users = sqliteTable('users', {
-  id: int('id', {mode: 'number'}).primaryKey({autoIncrement: true}).notNull(),
+  id: integer('id', {mode: 'number'})
+    .primaryKey({autoIncrement: true})
+    .notNull(),
   email: text('email').notNull(),
   password: text('password').notNull(),
 })
