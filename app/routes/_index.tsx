@@ -34,10 +34,12 @@ export const columns: Array<ColumnDef<Dev>> = [
   {
     accessorKey: 'link',
     header: '',
-    cell() {
+    cell({row}) {
       return (
         <div className="flex justify-end">
-          <MoveRight className="h-4 w-4" />
+          <a href={row.getValue('link')} target="_blank" rel="noreferrer">
+            <MoveRight className="h-4 w-4" />
+          </a>
         </div>
       )
     },
@@ -95,13 +97,7 @@ function DataTable({data}: {data: Array<Dev>}) {
             >
               {row.getVisibleCells().map(cell => (
                 <TableCell key={cell.id}>
-                  <a
-                    className="block p-4"
-                    href={row.getValue('link')}
-                    rel="noreferrer"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </a>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}
             </TableRow>
