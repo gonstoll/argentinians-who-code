@@ -3,10 +3,13 @@ import {useLoaderData} from '@remix-run/react'
 import {
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
   type ColumnDef,
+  type SortingState,
 } from '@tanstack/react-table'
-import {MoveRight} from 'lucide-react'
+import {ArrowUpDown, MoveRight} from 'lucide-react'
+import * as React from 'react'
 import {Badge} from '~/components/ui/badge'
 import {
   Table,
@@ -22,10 +25,31 @@ import {devs, type Expertise} from '~/db/schema'
 
 export const columns: Array<ColumnDef<Dev>> = [
   {accessorKey: 'name', header: 'Name'},
-  {accessorKey: 'from', header: 'From'},
+  {
+    accessorKey: 'from',
+    header({column}) {
+      return (
+        <button
+          className="flex items-center gap-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          From <ArrowUpDown className="h-4 w-4" />
+        </button>
+      )
+    },
+  },
   {
     accessorKey: 'expertise',
-    header: 'Expertise',
+    header({column}) {
+      return (
+        <button
+          className="flex items-center gap-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Expertise <ArrowUpDown className="h-4 w-4" />
+        </button>
+      )
+    },
     cell({getValue}) {
       const expertise = getValue<Expertise>()
       return <Badge variant={expertise}>• {expertise.toLowerCase()}</Badge>
@@ -61,10 +85,14 @@ export default function Index() {
 }
 
 function DataTable({data}: {data: Array<Dev>}) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {sorting},
   })
 
   return (
