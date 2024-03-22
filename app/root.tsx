@@ -21,6 +21,14 @@ import {Analytics} from '@vercel/analytics/react'
 import {Loader2} from 'lucide-react'
 import {GeneralErrorBoundary} from './components/error-boundary'
 import {Button, buttonVariants} from './components/ui/button'
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from './components/ui/menubar'
 import styles from './globals.css?url'
 import {cn} from './lib/utils'
 import {ThemeSwitch, useTheme} from './routes/resources.set-theme'
@@ -97,18 +105,11 @@ function Document({
   nonce,
   children,
   theme = 'light',
-  isAdmin = false,
 }: {
   nonce: string
   children: React.ReactNode
   theme?: Theme
-  isAdmin?: boolean
 }) {
-  const navigation = useNavigation()
-  const loggingOut =
-    navigation.state === 'submitting' &&
-    navigation.formData?.get('intent') === 'logout'
-
   return (
     <html lang="en" className={cn(theme, 'h-full')}>
       <head>
@@ -124,46 +125,73 @@ function Document({
       </head>
       <body className="flex h-full flex-col bg-background font-mono text-foreground">
         <Analytics />
-        <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-6 p-4">
-          <Link to="/">AWC</Link>
-          <nav className="flex items-center">
-            <ThemeSwitch />
-            <Link to="/about" className={buttonVariants({variant: 'link'})}>
-              About
-            </Link>
-            <Link to="/nominate" className={buttonVariants({variant: 'link'})}>
-              Nominate
-            </Link>
-            <a
-              href="https://www.buymeacoffee.com/argentinianswhocode"
-              target="_blank"
-              rel="noreferrer noopener"
-              className={buttonVariants({variant: 'link'})}
-            >
-              Donate
-            </a>
-            {isAdmin ? (
-              <>
-                <Link to="/admin" className={buttonVariants({variant: 'link'})}>
-                  Admin
-                </Link>
-                <Form method="POST" className="ml-2">
-                  <Button type="submit" name="intent" value="logout">
-                    {loggingOut ? (
-                      <Loader2 className="mr-2 animate-spin" />
-                    ) : null}
-                    Logout
-                  </Button>
-                </Form>
-              </>
-            ) : null}
-          </nav>
-        </header>
+        <Header />
         {children}
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
+  )
+}
+
+function Header() {
+  const {isAdmin} = useLoaderData<typeof loader>()
+  const navigation = useNavigation()
+  const loggingOut =
+    navigation.state === 'submitting' &&
+    navigation.formData?.get('intent') === 'logout'
+
+  return (
+    <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-6 p-4">
+      <Link to="/">AWC</Link>
+      <nav className="flex items-center">
+        <ThemeSwitch />
+        <Link to="/about" className={buttonVariants({variant: 'link'})}>
+          About
+        </Link>
+        <Link to="/nominate" className={buttonVariants({variant: 'link'})}>
+          Nominate
+        </Link>
+        <a
+          href="https://www.buymeacoffee.com/argentinianswhocode"
+          target="_blank"
+          rel="noreferrer noopener"
+          className={buttonVariants({variant: 'link'})}
+        >
+          Donate
+        </a>
+        {isAdmin ? (
+          <Menubar>
+            <MenubarMenu>
+              <MenubarTrigger className={buttonVariants({variant: 'link'})}>
+                Admin
+              </MenubarTrigger>
+              <MenubarContent align="end">
+                <MenubarItem>
+                  <Link to="/nominees" className="flex-1">
+                    Nominees
+                  </Link>
+                </MenubarItem>
+                <MenubarItem>
+                  <Link to="/devs">Devs</Link>
+                </MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem>
+                  <Form method="POST">
+                    <Button type="submit" name="intent" value="logout">
+                      {loggingOut ? (
+                        <Loader2 className="mr-2 animate-spin" />
+                      ) : null}
+                      Logout
+                    </Button>
+                  </Form>
+                </MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        ) : null}
+      </nav>
+    </header>
   )
 }
 
@@ -173,7 +201,7 @@ export default function App() {
   const nonce = useNonce()
 
   return (
-    <Document theme={theme} nonce={nonce} isAdmin={data.isAdmin}>
+    <Document theme={theme} nonce={nonce}>
       <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col p-4">
         <Outlet />
       </main>
