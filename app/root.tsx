@@ -1,9 +1,11 @@
 import type {
+  ActionFunctionArgs,
   LinkDescriptor,
   LoaderFunctionArgs,
   MetaDescriptor,
 } from '@remix-run/node'
 import {
+  Form,
   Link,
   Links,
   Meta,
@@ -11,17 +13,21 @@ import {
   Scripts,
   ScrollRestoration,
   json,
+  redirect,
   useLoaderData,
+  useNavigation,
 } from '@remix-run/react'
 import {Analytics} from '@vercel/analytics/react'
+import {Loader2} from 'lucide-react'
 import {GeneralErrorBoundary} from './components/error-boundary'
-import {buttonVariants} from './components/ui/button'
+import {Button, buttonVariants} from './components/ui/button'
 import styles from './globals.css?url'
 import {cn} from './lib/utils'
 import {ThemeSwitch, useTheme} from './routes/resources.set-theme'
 import {ClientHintCheck, getHints} from './utils/client-hints'
 import {getEnv} from './utils/env.server'
 import {useNonce} from './utils/nonce-provider'
+import {destroySession, getSession} from './utils/session.server'
 import {getTheme, type Theme} from './utils/theme.server'
 
 export function links(): Array<LinkDescriptor> {
@@ -57,22 +63,52 @@ export function meta(): Array<MetaDescriptor> {
 }
 
 export async function loader({request}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get('cookie'))
+  const userId = session.get('userId')
   return json({
+    isAdmin: Boolean(userId),
     hints: getHints(request),
     theme: getTheme(request),
     ENV: getEnv(),
   })
 }
 
+export async function action({request}: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get('cookie'))
+  const userId = session.get('userId')
+  const formData = await request.formData()
+  const intent = formData.get('intent')
+
+  switch (intent) {
+    case 'logout': {
+      if (!userId) return redirect('/login') // This should never happen but better safe than sorry
+      return redirect('/', {
+        headers: {'set-cookie': await destroySession(session)},
+      })
+    }
+
+    default: {
+      throw new Response('Unknown intent', {status: 400})
+    }
+  }
+}
+
 function Document({
-  theme = 'light',
   nonce,
   children,
+  theme = 'light',
+  isAdmin = false,
 }: {
-  theme?: Theme
   nonce: string
   children: React.ReactNode
+  theme?: Theme
+  isAdmin?: boolean
 }) {
+  const navigation = useNavigation()
+  const loggingOut =
+    navigation.state === 'submitting' &&
+    navigation.formData?.get('intent') === 'logout'
+
   return (
     <html lang="en" className={cn(theme, 'h-full')}>
       <head>
@@ -88,7 +124,7 @@ function Document({
       </head>
       <body className="flex h-full flex-col bg-background font-mono text-foreground">
         <Analytics />
-        <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between p-4">
+        <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-6 p-4">
           <Link to="/">AWC</Link>
           <nav className="flex items-center">
             <ThemeSwitch />
@@ -106,6 +142,21 @@ function Document({
             >
               Donate
             </a>
+            {isAdmin ? (
+              <>
+                <Link to="/admin" className={buttonVariants({variant: 'link'})}>
+                  Admin
+                </Link>
+                <Form method="POST" className="ml-2">
+                  <Button type="submit" name="intent" value="logout">
+                    {loggingOut ? (
+                      <Loader2 className="mr-2 animate-spin" />
+                    ) : null}
+                    Logout
+                  </Button>
+                </Form>
+              </>
+            ) : null}
           </nav>
         </header>
         {children}
@@ -122,7 +173,7 @@ export default function App() {
   const nonce = useNonce()
 
   return (
-    <Document theme={theme} nonce={nonce}>
+    <Document theme={theme} nonce={nonce} isAdmin={data.isAdmin}>
       <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col p-4">
         <Outlet />
       </main>

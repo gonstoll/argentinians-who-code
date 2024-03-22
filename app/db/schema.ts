@@ -38,7 +38,9 @@ const commonColumns = {
   expertise: text('expertise', {enum: expertise}).notNull(),
   link: text('link', {length: 200}).notNull(),
   reason: text('reason', {length: 300}).notNull(),
-  createdAt: text('createdAt').default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text('createdAt')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 }
 
 export const devs = sqliteTable('devs', commonColumns)

@@ -202,7 +202,7 @@ export default function Nominate() {
             <SelectContent>
               {expertise.map(p => (
                 <SelectItem key={p} value={p}>
-                  <Badge variant={p}>{p}</Badge>
+                  <Badge variant={p}>• {p}</Badge>
                 </SelectItem>
               ))}
             </SelectContent>
