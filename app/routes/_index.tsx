@@ -9,7 +9,7 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import {inArray} from 'drizzle-orm'
-import {ArrowUpDown, MoveRight} from 'lucide-react'
+import {ArrowUpDown, ArrowUpRight} from 'lucide-react'
 import * as React from 'react'
 import {Badge} from '~/components/ui/badge'
 import {
@@ -67,7 +67,7 @@ export const columns: Array<ColumnDef<Dev>> = [
       return (
         <div className="flex justify-end">
           <a href={row.getValue('link')} target="_blank" rel="noreferrer">
-            <MoveRight className="h-4 w-4" />
+            <ArrowUpRight className="h-4 w-4" />
           </a>
         </div>
       )
@@ -108,7 +108,7 @@ export default function Index() {
   return (
     <section>
       <div className="mb-4 inline-block md:float-right">
-        <div className="m:p-4 flex flex-wrap items-center gap-1 rounded-md border border-border px-2 py-4 md:gap-2">
+        <div className="flex flex-wrap items-center gap-1 rounded-md border border-border p-3 md:gap-2 md:p-4">
           {expertise.map(e => {
             const expertiseSearchParams = searchParams.getAll('expertise')
             const isActive =
@@ -147,7 +147,7 @@ function DataTable({data}: {data: Array<Dev>}) {
 
   return (
     <Table>
-      <TableHeader>
+      <TableHeader className="sticky top-0 bg-background">
         {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map(header => {
