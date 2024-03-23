@@ -109,10 +109,12 @@ export async function action({request}: ActionFunctionArgs) {
 function Document({
   nonce,
   children,
+  isAdmin = false,
   theme = 'light',
 }: {
   nonce: string
   children: React.ReactNode
+  isAdmin?: boolean
   theme?: Theme
 }) {
   return (
@@ -130,7 +132,7 @@ function Document({
       </head>
       <body className="flex h-full flex-col bg-background font-mono text-foreground">
         <Analytics />
-        <Header />
+        <Header isAdmin={isAdmin} />
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -139,8 +141,7 @@ function Document({
   )
 }
 
-function Header() {
-  const {isAdmin} = useLoaderData<typeof loader>()
+function Header({isAdmin = false}: {isAdmin: boolean}) {
   const navigation = useNavigation()
   const location = useLocation()
   const loggingOut =
@@ -324,7 +325,7 @@ export default function App() {
   const nonce = useNonce()
 
   return (
-    <Document theme={theme} nonce={nonce}>
+    <Document theme={theme} nonce={nonce} isAdmin={data.isAdmin}>
       <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col p-4">
         <Outlet />
       </main>
