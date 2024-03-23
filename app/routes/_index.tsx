@@ -89,7 +89,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
   const [searchParams, setSearchParams] = useSearchParams()
-  const listNotempty = data.length > 0
+  const listHasItems = data.length > 0
 
   function handleSearchParams(expertise: Expertise[number]) {
     setSearchParams(
@@ -108,7 +108,7 @@ export default function Index() {
 
   return (
     <section>
-      {listNotempty ? (
+      {listHasItems ? (
         <div className="mb-4 inline-block md:float-right">
           <div className="flex flex-wrap items-center gap-1 rounded-md border border-border p-3 md:gap-2 md:p-4">
             {expertise.map(e => {
