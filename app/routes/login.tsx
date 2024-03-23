@@ -7,6 +7,7 @@ import {
   redirect,
   useActionData,
   useNavigation,
+  useSearchParams,
 } from '@remix-run/react'
 import bcrypt from 'bcryptjs'
 import {eq} from 'drizzle-orm'
@@ -22,6 +23,7 @@ import {users} from '~/db/schema'
 import {commitSession, getSession} from '~/utils/session.server'
 
 export const schema = z.object({
+  redirectTo: z.string().optional(),
   email: z
     .string({required_error: 'Email is required'})
     .email({message: 'Incorrect mail format'})
@@ -46,7 +48,7 @@ export async function action({request}: ActionFunctionArgs) {
     )
   }
 
-  const {email, password} = result.value
+  const {redirectTo, email, password} = result.value
   const user = await db.select().from(users).where(eq(users.email, email))
   if (!user.length) {
     return json(
@@ -75,7 +77,7 @@ export async function action({request}: ActionFunctionArgs) {
 
   const session = await getSession()
   session.set('userId', String(user[0].id))
-  return redirect('/nominees', {
+  return redirect(redirectTo ?? '/about', {
     headers: {
       'set-cookie': await commitSession(session, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
@@ -85,6 +87,7 @@ export async function action({request}: ActionFunctionArgs) {
 }
 
 export default function Login() {
+  const [searchParams] = useSearchParams()
   const actionData = useActionData<typeof action>()
   const navigation = useNavigation()
   const submitting = navigation.state === 'submitting'
@@ -111,6 +114,12 @@ export default function Login() {
             </Alert>
           </div>
         ) : null}
+
+        <input
+          type="hidden"
+          name="redirectTo"
+          value={searchParams.get('redirectTo') ?? undefined}
+        />
 
         <div className="mb-4 flex flex-col gap-2">
           <Label htmlFor={fields.email.id}>Email</Label>
