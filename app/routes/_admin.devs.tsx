@@ -55,7 +55,7 @@ export async function action({request}: ActionFunctionArgs) {
   const intent = formData.get('intent')
   const devId = formData.get('devId')
 
-  if (!devId) {
+  if (!devId || typeof devId !== 'string') {
     throw new Response('Nominee ID is required', {status: 400})
   }
 
@@ -88,8 +88,7 @@ export async function action({request}: ActionFunctionArgs) {
     }
 
     case 'edit': {
-      // Most likely redirect to a new page with the form pre-filled
-      return null
+      throw redirect(`/devs/${devId}`)
     }
 
     default: {
