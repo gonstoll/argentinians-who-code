@@ -1,7 +1,8 @@
 import {json, redirect, type ActionFunctionArgs} from '@remix-run/node'
 import {Form, useLoaderData} from '@remix-run/react'
-import {asc} from 'drizzle-orm'
+import {asc, eq} from 'drizzle-orm'
 import {AlignLeft, ArrowUpRight, CalendarDays} from 'lucide-react'
+import {GeneralErrorBoundary} from '~/components/error-boundary'
 import {Badge} from '~/components/ui/badge'
 import {Button} from '~/components/ui/button'
 import {
@@ -12,7 +13,7 @@ import {
   CardTitle,
 } from '~/components/ui/card'
 import {db} from '~/db'
-import {nominees} from '~/db/schema'
+import {devs, nominees} from '~/db/schema'
 import {destroySession, getSession} from '~/utils/session.server'
 
 export async function loader() {
@@ -29,6 +30,11 @@ export async function action({request}: ActionFunctionArgs) {
   const userId = session.get('userId')
   const formData = await request.formData()
   const intent = formData.get('intent') // 'approve' | 'reject' | 'edit'
+  const nomineeId = formData.get('nomineeId')
+
+  if (!nomineeId) {
+    throw new Response('Nominee ID is required', {status: 400})
+  }
 
   if (!userId) {
     // This should never happen because we redirect on the
@@ -40,8 +46,21 @@ export async function action({request}: ActionFunctionArgs) {
 
   switch (intent) {
     case 'approve': {
-      // Approve nominee
-      break
+      const nominee = await db
+        .select({
+          name: nominees.name,
+          from: nominees.from,
+          expertise: nominees.expertise,
+          link: nominees.link,
+          reason: nominees.reason,
+        })
+        .from(nominees)
+        .where(eq(nominees.id, Number(nomineeId)))
+        .get()
+      if (!nominee) throw new Response('Nominee not found', {status: 404})
+      await db.insert(devs).values(nominee)
+      await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
+      return null
     }
 
     case 'reject': {
@@ -55,7 +74,7 @@ export async function action({request}: ActionFunctionArgs) {
     }
 
     default: {
-      throw new Response('Invalid intent', {status: 400})
+      throw new Response('Invalid form intent', {status: 400})
     }
   }
 }
@@ -114,6 +133,7 @@ export default function Admin() {
             </CardContent>
             <CardFooter>
               <Form method="POST" className="flex gap-2">
+                <input type="hidden" name="nomineeId" value={n.id} />
                 <Button
                   type="submit"
                   name="intent"
@@ -144,5 +164,19 @@ export default function Admin() {
         ))}
       </div>
     </div>
+  )
+}
+
+export function ErrorBoundary() {
+  return (
+    <GeneralErrorBoundary
+      statusHandlers={{
+        400: () => (
+          <p className="text-muted-foreground">
+            Invalid attempt, please try again later
+          </p>
+        ),
+      }}
+    />
   )
 }

@@ -8,7 +8,7 @@ import {
   type ColumnDef,
   type SortingState,
 } from '@tanstack/react-table'
-import {inArray} from 'drizzle-orm'
+import {desc, inArray} from 'drizzle-orm'
 import {ArrowUpDown, ArrowUpRight} from 'lucide-react'
 import * as React from 'react'
 import {Badge} from '~/components/ui/badge'
@@ -82,6 +82,7 @@ export async function loader({request}: LoaderFunctionArgs) {
     .select()
     .from(devs)
     .where(inArray(devs.expertise, query.length ? query : [...expertise]))
+    .orderBy(desc(devs.createdAt))
     .all()
   return json({data})
 }
