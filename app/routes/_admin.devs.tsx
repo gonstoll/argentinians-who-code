@@ -12,17 +12,12 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
-import {Input} from '~/components/ui/input'
 import {db} from '~/db'
-import {devs, nominees} from '~/db/schema'
+import {devs} from '~/db/schema'
 import {destroySession, getSession} from '~/utils/session.server'
 
 export async function loader() {
-  const data = await db
-    .select()
-    .from(nominees)
-    .orderBy(asc(nominees.createdAt))
-    .all()
+  const data = await db.select().from(devs).orderBy(asc(devs.createdAt)).all()
   return json({data})
 }
 
@@ -30,10 +25,10 @@ export async function action({request}: ActionFunctionArgs) {
   const session = await getSession(request.headers.get('cookie'))
   const userId = session.get('userId')
   const formData = await request.formData()
-  const intent = formData.get('intent') // 'approve' | 'reject' | 'edit'
-  const nomineeId = formData.get('nomineeId')
+  const intent = formData.get('intent')
+  const devId = formData.get('devId')
 
-  if (!nomineeId) {
+  if (!devId) {
     throw new Response('Nominee ID is required', {status: 400})
   }
 
@@ -45,29 +40,23 @@ export async function action({request}: ActionFunctionArgs) {
     })
   }
 
-  const nominee = await db
+  const dev = await db
     .select({
-      name: nominees.name,
-      from: nominees.from,
-      expertise: nominees.expertise,
-      link: nominees.link,
-      reason: nominees.reason,
+      name: devs.name,
+      from: devs.from,
+      expertise: devs.expertise,
+      link: devs.link,
+      reason: devs.reason,
     })
-    .from(nominees)
-    .where(eq(nominees.id, Number(nomineeId)))
+    .from(devs)
+    .where(eq(devs.id, Number(devId)))
     .get()
 
-  if (!nominee) throw new Response('Nominee not found', {status: 404})
+  if (!dev) throw new Response('Dev not found', {status: 404})
 
   switch (intent) {
-    case 'approve': {
-      await db.insert(devs).values(nominee)
-      await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
-      return null
-    }
-
     case 'delete': {
-      await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
+      await db.delete(devs).where(eq(devs.id, Number(devId)))
       return null
     }
 
@@ -82,28 +71,27 @@ export async function action({request}: ActionFunctionArgs) {
   }
 }
 
-export default function NomineesPage() {
+export default function DevsPage() {
   const {data} = useLoaderData<typeof loader>()
 
   return (
     <div>
       <h1 className="mb-6 scroll-m-20 text-2xl font-extrabold lg:text-3xl">
-        Nominees
+        Devs
       </h1>
       <p className="mb-6 leading-7">
-        This is a list of all the nominees that have been submitted to the site.
-        You can approve, reject, or edit any of them by clicking the
-        corresponding button below each nominee.
+        This is a list of all the devs that have been approved. You can delete
+        or edit any of them by clicking the corresponding button below each one.
       </p>
 
       <div className="flex flex-col gap-6">
-        {data.map(n => (
-          <Card key={n.id}>
+        {data.map(d => (
+          <Card key={d.id}>
             <CardHeader>
-              <CardTitle className="text-lg lg:text-xl">{n.name}</CardTitle>
+              <CardTitle className="text-lg lg:text-xl">{d.name}</CardTitle>
               <div className="flex items-center gap-2">
-                <p className="text-sm text-muted-foreground">{n.from}</p> -{' '}
-                <Badge variant={n.expertise}>• {n.expertise}</Badge>
+                <p className="text-sm text-muted-foreground">{d.from}</p> -{' '}
+                <Badge variant={d.expertise}>• {d.expertise}</Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -111,7 +99,7 @@ export default function NomineesPage() {
                 <li className="flex items-start gap-2">
                   <CalendarDays className="w-5" />
                   <p className="flex-1">
-                    {new Date(n.createdAt).toLocaleDateString('en-US', {
+                    {new Date(d.createdAt).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -123,28 +111,20 @@ export default function NomineesPage() {
                 <li className="flex items-start gap-2">
                   <ArrowUpRight className="w-5" />
                   <div className="flex-1">
-                    <a href={n.link} target="_blank" rel="noreferrer">
-                      {n.link}
+                    <a href={d.link} target="_blank" rel="noreferrer">
+                      {d.link}
                     </a>
                   </div>
                 </li>
                 <li className="flex items-start gap-2">
                   <AlignLeft className="w-5" />
-                  <p className="flex-1">{n.reason}</p>
+                  <p className="flex-1">{d.reason}</p>
                 </li>
               </ul>
             </CardContent>
             <CardFooter>
               <Form method="POST" className="flex gap-2">
-                <input type="hidden" name="nomineeId" value={n.id} />
-                <Button
-                  type="submit"
-                  name="intent"
-                  value="approve"
-                  variant="default"
-                >
-                  Approve
-                </Button>
+                <input type="hidden" name="devId" value={d.id} />
                 <Button
                   type="submit"
                   name="intent"
@@ -159,7 +139,7 @@ export default function NomineesPage() {
                   value="delete"
                   variant="destructive"
                 >
-                  Reject
+                  Delete
                 </Button>
               </Form>
             </CardFooter>
