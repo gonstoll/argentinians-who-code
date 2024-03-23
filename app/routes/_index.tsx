@@ -89,6 +89,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
   const [searchParams, setSearchParams] = useSearchParams()
+  const listNotempty = data.length > 0
 
   function handleSearchParams(expertise: Expertise[number]) {
     setSearchParams(
@@ -107,28 +108,31 @@ export default function Index() {
 
   return (
     <section>
-      <div className="mb-4 inline-block md:float-right">
-        <div className="flex flex-wrap items-center gap-1 rounded-md border border-border p-3 md:gap-2 md:p-4">
-          {expertise.map(e => {
-            const expertiseSearchParams = searchParams.getAll('expertise')
-            const isActive =
-              expertiseSearchParams.includes(e) || !expertiseSearchParams.length
+      {listNotempty ? (
+        <div className="mb-4 inline-block md:float-right">
+          <div className="flex flex-wrap items-center gap-1 rounded-md border border-border p-3 md:gap-2 md:p-4">
+            {expertise.map(e => {
+              const expertiseSearchParams = searchParams.getAll('expertise')
+              const isActive =
+                expertiseSearchParams.includes(e) ||
+                !expertiseSearchParams.length
 
-            return (
-              <Badge
-                key={e}
-                variant={e}
-                className={classNames('cursor-pointer opacity-40', {
-                  'opacity-100': isActive,
-                })}
-                onClick={() => handleSearchParams(e)}
-              >
-                • {e.toLowerCase()}
-              </Badge>
-            )
-          })}
+              return (
+                <Badge
+                  key={e}
+                  variant={e}
+                  className={classNames('cursor-pointer', {
+                    'opacity-40': !isActive,
+                  })}
+                  onClick={() => handleSearchParams(e)}
+                >
+                  • {e.toLowerCase()}
+                </Badge>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      ) : null}
       <DataTable data={data} />
     </section>
   )
