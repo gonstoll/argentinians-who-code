@@ -20,13 +20,15 @@ import {
   useNavigation,
 } from '@remix-run/react'
 import {Analytics} from '@vercel/analytics/react'
-import {CornerRightDown, CornerRightUp, Loader2} from 'lucide-react'
+import {CornerRightDown, CornerRightUp, Loader2, Menu, X} from 'lucide-react'
 import {GeneralErrorBoundary} from './components/error-boundary'
 import {Button, buttonVariants} from './components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -149,8 +151,99 @@ function Header() {
     <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-6 p-4">
       <Link to="/">AWC</Link>
 
+      {/* Mobile nav */}
+      <nav className="flex items-center sm:hidden">
+        <ThemeSwitch />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="group">
+              <Menu className="hidden h-5 w-5 group-data-[state='closed']:block" />
+              <X className="hidden h-5 w-5 group-data-[state='open']:block" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                asChild
+                className={classNames(
+                  'block h-10 cursor-pointer px-4 py-2 text-sm text-primary underline-offset-4 hover:underline',
+                  {underline: location.pathname === '/about'},
+                )}
+              >
+                <NavLink to="/about">About</NavLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                asChild
+                className={classNames(
+                  'block h-10 cursor-pointer px-4 py-2 text-sm text-primary underline-offset-4 hover:underline',
+                  {underline: location.pathname === '/nominate'},
+                )}
+              >
+                <NavLink to="/nominate">Nominate</NavLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                asChild
+                className="block h-10 cursor-pointer px-4 py-2 text-sm text-primary underline-offset-4 hover:underline"
+              >
+                <a
+                  href="https://www.buymeacoffee.com/argentinianswhocode"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={classNames(
+                    'font-normal',
+                    buttonVariants({variant: 'link'}),
+                  )}
+                >
+                  Donate
+                </a>
+              </DropdownMenuItem>
+
+              {isAdmin ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="font-bold">
+                      Admin
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      asChild
+                      className={classNames(
+                        'block h-10 cursor-pointer px-4 py-2 text-sm text-primary underline-offset-4 hover:underline',
+                        {underline: location.pathname.includes('/nominees')},
+                      )}
+                    >
+                      <NavLink to="/nominees">Nominees</NavLink>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      asChild
+                      className={classNames(
+                        'block h-10 cursor-pointer px-4 py-2 text-sm text-primary underline-offset-4 hover:underline',
+                        {underline: location.pathname.includes('/devs')},
+                      )}
+                    >
+                      <NavLink to="/devs">Devs</NavLink>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Form method="POST" className="pl-2">
+                        <Button type="submit" name="intent" value="logout">
+                          {loggingOut ? (
+                            <Loader2 className="mr-2 animate-spin" />
+                          ) : null}
+                          Logout
+                        </Button>
+                      </Form>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenuPortal>
+        </DropdownMenu>
+      </nav>
+
       {/* Desktop nav */}
-      <nav className="flex items-center">
+      <nav className="hidden items-center sm:flex">
         <ThemeSwitch />
         <NavLink
           to="/about"
@@ -181,8 +274,8 @@ function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="link" className="group gap-2">
                 Admin
-                <CornerRightUp className="hidden h-3 w-3 group-data-[state='open']:block" />
                 <CornerRightDown className="hidden h-3 w-3 group-data-[state='closed']:block" />
+                <CornerRightUp className="hidden h-3 w-3 group-data-[state='open']:block" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuPortal>
@@ -191,7 +284,7 @@ function Header() {
                   asChild
                   className={classNames(
                     'block h-10 cursor-pointer px-4 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline',
-                    {underline: location.pathname === '/nominees'},
+                    {underline: location.pathname.includes('/nominees')},
                   )}
                 >
                   <NavLink to="/nominees">Nominees</NavLink>
@@ -200,7 +293,7 @@ function Header() {
                   asChild
                   className={classNames(
                     'block h-10 cursor-pointer px-4 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline',
-                    {underline: location.pathname === '/devs'},
+                    {underline: location.pathname.includes('/devs')},
                   )}
                 >
                   <NavLink to="/devs">Devs</NavLink>
