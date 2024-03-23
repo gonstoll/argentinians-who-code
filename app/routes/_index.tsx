@@ -1,5 +1,5 @@
 import {json, type LoaderFunctionArgs} from '@remix-run/node'
-import {useLoaderData, useSearchParams} from '@remix-run/react'
+import {useLoaderData} from '@remix-run/react'
 import {
   flexRender,
   getCoreRowModel,
@@ -11,6 +11,7 @@ import {
 import {desc, inArray} from 'drizzle-orm'
 import {ArrowUpDown, ArrowUpRight} from 'lucide-react'
 import * as React from 'react'
+import {ExpertiseFilters} from '~/components/expertise-filters'
 import {Badge} from '~/components/ui/badge'
 import {
   Table,
@@ -22,8 +23,7 @@ import {
 } from '~/components/ui/table'
 import {db} from '~/db'
 import type {Dev} from '~/db/schema'
-import {devs, expertise, type Expertise} from '~/db/schema'
-import {classNames} from '~/utils/misc'
+import {devs, type Expertise} from '~/db/schema'
 
 export const columns: Array<ColumnDef<Dev>> = [
   {accessorKey: 'name', size: 130, header: 'Name'},
@@ -89,49 +89,13 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
-  const [searchParams, setSearchParams] = useSearchParams()
   const listHasItems = data.length > 0
-
-  function handleSearchParams(expertise: Expertise[number]) {
-    setSearchParams(
-      prev => {
-        const expertiseParams = prev.getAll('expertise')
-        if (expertiseParams.includes(expertise)) {
-          prev.delete('expertise', expertise)
-          return prev
-        }
-        prev.append('expertise', expertise)
-        return prev
-      },
-      {preventScrollReset: true},
-    )
-  }
 
   return (
     <section>
       {listHasItems ? (
         <div className="mb-4 inline-block md:float-right">
-          <div className="flex flex-wrap items-center gap-1 rounded-md border border-border p-3 md:gap-2 md:p-4">
-            {expertise.map(e => {
-              const expertiseSearchParams = searchParams.getAll('expertise')
-              const isActive =
-                expertiseSearchParams.includes(e) ||
-                !expertiseSearchParams.length
-
-              return (
-                <Badge
-                  key={e}
-                  variant={e}
-                  className={classNames('cursor-pointer', {
-                    'opacity-40': !isActive,
-                  })}
-                  onClick={() => handleSearchParams(e)}
-                >
-                  • {e.toLowerCase()}
-                </Badge>
-              )
-            })}
-          </div>
+          <ExpertiseFilters />
         </div>
       ) : null}
       <DataTable data={data} />
