@@ -44,33 +44,35 @@ export async function action({request}: ActionFunctionArgs) {
     })
   }
 
+  const nominee = await db
+    .select({
+      name: nominees.name,
+      from: nominees.from,
+      expertise: nominees.expertise,
+      link: nominees.link,
+      reason: nominees.reason,
+    })
+    .from(nominees)
+    .where(eq(nominees.id, Number(nomineeId)))
+    .get()
+
+  if (!nominee) throw new Response('Nominee not found', {status: 404})
+
   switch (intent) {
     case 'approve': {
-      const nominee = await db
-        .select({
-          name: nominees.name,
-          from: nominees.from,
-          expertise: nominees.expertise,
-          link: nominees.link,
-          reason: nominees.reason,
-        })
-        .from(nominees)
-        .where(eq(nominees.id, Number(nomineeId)))
-        .get()
-      if (!nominee) throw new Response('Nominee not found', {status: 404})
       await db.insert(devs).values(nominee)
       await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
       return null
     }
 
     case 'reject': {
-      // Reject nominee
-      break
+      await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
+      return null
     }
 
     case 'edit': {
-      // Edit nominee
-      break
+      // Most likely redirect to a new page with the form pre-filled
+      return null
     }
 
     default: {
