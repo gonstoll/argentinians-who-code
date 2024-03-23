@@ -1,7 +1,18 @@
-import {json, redirect, type ActionFunctionArgs} from '@remix-run/node'
-import {Form, useLoaderData} from '@remix-run/react'
-import {asc, eq} from 'drizzle-orm'
-import {AlignLeft, ArrowUpRight, CalendarDays} from 'lucide-react'
+import {
+  json,
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from '@remix-run/node'
+import {
+  Form,
+  useLoaderData,
+  useNavigation,
+  useSearchParams,
+} from '@remix-run/react'
+import {and, asc, eq, inArray, like} from 'drizzle-orm'
+import {AlignLeft, ArrowUpRight, CalendarDays, Loader2} from 'lucide-react'
+import * as React from 'react'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
 import {Badge} from '~/components/ui/badge'
 import {Button} from '~/components/ui/button'
@@ -12,12 +23,28 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import {Input} from '~/components/ui/input'
+import {Label} from '~/components/ui/label'
 import {db} from '~/db'
-import {devs} from '~/db/schema'
+import {devs, expertise, type Expertise} from '~/db/schema'
+import {classNames} from '~/utils/misc'
 import {destroySession, getSession} from '~/utils/session.server'
 
-export async function loader() {
-  const data = await db.select().from(devs).orderBy(asc(devs.createdAt)).all()
+export async function loader({request}: LoaderFunctionArgs) {
+  const url = new URL(request.url)
+  const query = url.searchParams.get('query')
+  const filters = url.searchParams.getAll('expertise') as Array<Expertise>
+  const data = await db
+    .select()
+    .from(devs)
+    .where(
+      and(
+        query ? like(devs.name, `%${query}%`) : undefined,
+        filters.length ? inArray(devs.expertise, filters) : undefined,
+      ),
+    )
+    .orderBy(asc(devs.createdAt))
+    .all()
   return json({data})
 }
 
@@ -73,6 +100,45 @@ export async function action({request}: ActionFunctionArgs) {
 
 export default function DevsPage() {
   const {data} = useLoaderData<typeof loader>()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigation = useNavigation()
+  const timeoutRef = React.useRef<NodeJS.Timeout>()
+  const loading = navigation.state === 'loading'
+  const searching = loading && searchParams.has('query')
+
+  function handleSearch(term: string) {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    timeoutRef.current = setTimeout(() => {
+      setSearchParams(
+        prev => {
+          if (!term) {
+            prev.delete('query')
+            return prev
+          }
+          prev.set('query', term)
+          return prev
+        },
+        {preventScrollReset: true},
+      )
+    }, 300)
+  }
+
+  function handleFilters(expertise: Expertise[number]) {
+    setSearchParams(
+      prev => {
+        const expertiseParams = prev.getAll('expertise')
+        if (expertiseParams.includes(expertise)) {
+          prev.delete('expertise', expertise)
+          return prev
+        }
+        prev.append('expertise', expertise)
+        return prev
+      },
+      {preventScrollReset: true},
+    )
+  }
 
   return (
     <div>
@@ -83,6 +149,54 @@ export default function DevsPage() {
         This is a list of all the devs that have been approved. You can delete
         or edit any of them by clicking the corresponding button below each one.
       </p>
+
+      <div className="mb-6 flex flex-wrap-reverse items-start justify-between gap-4">
+        <div className="relative min-w-60 flex-1">
+          <Label htmlFor="search">Search devs</Label>
+          <div className="relative">
+            <Input
+              type="search"
+              name="query"
+              id="search"
+              className="pr-8"
+              defaultValue={searchParams.get('query') ?? ''}
+              onChange={e => handleSearch(e.target.value)}
+            />
+            {searching ? (
+              <div className="absolute right-2 top-1/2 -translate-y-2/4">
+                <Loader2 className="animate-spin" />
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="inline-block md:float-right">
+          <p className="mb-1 text-sm font-medium leading-none">
+            Filter by expertise
+          </p>
+          <div className="flex flex-wrap items-center gap-1 rounded-md border border-border p-3 md:gap-2 md:p-4">
+            {expertise.map(e => {
+              const expertiseSearchParams = searchParams.getAll('expertise')
+              const isActive =
+                expertiseSearchParams.includes(e) ||
+                !expertiseSearchParams.length
+
+              return (
+                <Badge
+                  key={e}
+                  variant={e}
+                  className={classNames('cursor-pointer', {
+                    'opacity-40': !isActive,
+                  })}
+                  onClick={() => handleFilters(e)}
+                >
+                  • {e.toLowerCase()}
+                </Badge>
+              )
+            })}
+          </div>
+        </div>
+      </div>
 
       <div className="flex flex-col gap-6">
         {data.map(d => (

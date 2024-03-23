@@ -45,8 +45,6 @@ export async function loader({request}: LoaderFunctionArgs) {
     )
     .orderBy(asc(nominees.createdAt))
     .all()
-
-  console.log('logging data: ', data)
   return json({data})
 }
 
