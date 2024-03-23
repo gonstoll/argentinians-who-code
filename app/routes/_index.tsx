@@ -81,7 +81,7 @@ export async function loader({request}: LoaderFunctionArgs) {
   const data = await db
     .select()
     .from(devs)
-    .where(inArray(devs.expertise, query.length ? query : [...expertise]))
+    .where(query.length ? inArray(devs.expertise, query) : undefined)
     .orderBy(desc(devs.createdAt))
     .all()
   return json({data})
