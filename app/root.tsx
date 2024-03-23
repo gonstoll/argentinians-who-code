@@ -9,31 +9,34 @@ import {
   Link,
   Links,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
   json,
   redirect,
   useLoaderData,
+  useLocation,
   useNavigation,
 } from '@remix-run/react'
 import {Analytics} from '@vercel/analytics/react'
-import {Loader2} from 'lucide-react'
+import {CornerRightDown, CornerRightUp, Loader2} from 'lucide-react'
 import {GeneralErrorBoundary} from './components/error-boundary'
 import {Button, buttonVariants} from './components/ui/button'
 import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-} from './components/ui/menubar'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './components/ui/dropdown-menu'
 import styles from './globals.css?url'
 import {cn} from './lib/utils'
 import {ThemeSwitch, useTheme} from './routes/resources.set-theme'
 import {ClientHintCheck, getHints} from './utils/client-hints'
 import {getEnv} from './utils/env.server'
+import {classNames} from './utils/misc'
 import {useNonce} from './utils/nonce-provider'
 import {destroySession, getSession} from './utils/session.server'
 import {getTheme, type Theme} from './utils/theme.server'
@@ -137,6 +140,7 @@ function Document({
 function Header() {
   const {isAdmin} = useLoaderData<typeof loader>()
   const navigation = useNavigation()
+  const location = useLocation()
   const loggingOut =
     navigation.state === 'submitting' &&
     navigation.formData?.get('intent') === 'logout'
@@ -144,14 +148,26 @@ function Header() {
   return (
     <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-6 p-4">
       <Link to="/">AWC</Link>
+
+      {/* Desktop nav */}
       <nav className="flex items-center">
         <ThemeSwitch />
-        <Link to="/about" className={buttonVariants({variant: 'link'})}>
+        <NavLink
+          to="/about"
+          className={({isActive}) =>
+            classNames(buttonVariants({variant: 'link'}), {underline: isActive})
+          }
+        >
           About
-        </Link>
-        <Link to="/nominate" className={buttonVariants({variant: 'link'})}>
+        </NavLink>
+        <NavLink
+          to="/nominate"
+          className={({isActive}) =>
+            classNames(buttonVariants({variant: 'link'}), {underline: isActive})
+          }
+        >
           Nominate
-        </Link>
+        </NavLink>
         <a
           href="https://www.buymeacoffee.com/argentinianswhocode"
           target="_blank"
@@ -161,23 +177,37 @@ function Header() {
           Donate
         </a>
         {isAdmin ? (
-          <Menubar>
-            <MenubarMenu>
-              <MenubarTrigger className={buttonVariants({variant: 'link'})}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="link" className="group gap-2">
                 Admin
-              </MenubarTrigger>
-              <MenubarContent align="end">
-                <MenubarItem>
-                  <Link to="/nominees" className="flex-1">
-                    Nominees
-                  </Link>
-                </MenubarItem>
-                <MenubarItem>
-                  <Link to="/devs">Devs</Link>
-                </MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>
-                  <Form method="POST">
+                <CornerRightUp className="hidden h-3 w-3 group-data-[state='open']:block" />
+                <CornerRightDown className="hidden h-3 w-3 group-data-[state='closed']:block" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  asChild
+                  className={classNames(
+                    'block h-10 cursor-pointer px-4 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline',
+                    {underline: location.pathname === '/nominees'},
+                  )}
+                >
+                  <NavLink to="/nominees">Nominees</NavLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  asChild
+                  className={classNames(
+                    'block h-10 cursor-pointer px-4 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline',
+                    {underline: location.pathname === '/devs'},
+                  )}
+                >
+                  <NavLink to="/devs">Devs</NavLink>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Form method="POST" className="pl-2">
                     <Button type="submit" name="intent" value="logout">
                       {loggingOut ? (
                         <Loader2 className="mr-2 animate-spin" />
@@ -185,10 +215,10 @@ function Header() {
                       Logout
                     </Button>
                   </Form>
-                </MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuPortal>
+          </DropdownMenu>
         ) : null}
       </nav>
     </header>
