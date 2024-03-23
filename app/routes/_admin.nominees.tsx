@@ -68,6 +68,12 @@ export default function Admin() {
       <h1 className="mb-6 scroll-m-20 text-2xl font-extrabold lg:text-4xl">
         Nominees
       </h1>
+      <p className="mb-6 leading-7">
+        This is a list of all the nominees that have been submitted to the site.
+        You can approve, reject, or edit any of them by clicking the
+        corresponding button below each nominee.
+      </p>
+
       <div className="flex flex-col gap-6">
         {data.map(n => (
           <Card key={n.id}>
