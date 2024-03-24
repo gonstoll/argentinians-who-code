@@ -1,4 +1,4 @@
-import {json, type LoaderFunctionArgs} from '@remix-run/node'
+import {json, type HeadersArgs, type LoaderFunctionArgs} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {
   flexRender,
@@ -10,6 +10,7 @@ import {
 } from '@tanstack/react-table'
 import {desc, inArray} from 'drizzle-orm'
 import {ArrowUpDown, ArrowUpRight} from 'lucide-react'
+import {cacheHeader} from 'pretty-cache-header'
 import * as React from 'react'
 import {ExpertiseFilters} from '~/components/expertise-filters'
 import {Badge} from '~/components/ui/badge'
@@ -75,6 +76,10 @@ export const columns: Array<ColumnDef<Dev>> = [
   },
 ]
 
+export function headers({loaderHeaders}: HeadersArgs) {
+  return {'Cache-Control': loaderHeaders.get('Cache-Control')}
+}
+
 export async function loader({request}: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const query = url.searchParams.getAll('expertise') as Array<Expertise>
@@ -84,7 +89,16 @@ export async function loader({request}: LoaderFunctionArgs) {
     .where(query.length ? inArray(devs.expertise, query) : undefined)
     .orderBy(desc(devs.createdAt))
     .all()
-  return json({data})
+  const headers = {
+    'Cache-Control': cacheHeader({
+      public: true,
+      maxAge: '10mins',
+      sMaxage: '3days',
+      staleWhileRevalidate: '1year',
+      staleIfError: '1year',
+    }),
+  }
+  return json({data}, {headers})
 }
 
 export default function Index() {

@@ -60,6 +60,10 @@ function handleBotRequest(
 
           responseHeaders.set('Content-Type', 'text/html')
 
+          if (process.env.NODE_ENV !== 'production') {
+            responseHeaders.set('Cache-Control', 'no-store')
+          }
+
           resolve(
             new Response(stream, {
               headers: responseHeaders,
@@ -109,6 +113,10 @@ function handleBrowserRequest(
           const stream = createReadableStreamFromReadable(body)
 
           responseHeaders.set('Content-Type', 'text/html')
+
+          if (process.env.NODE_ENV !== 'production' {
+            responseHeaders.set('Cache-Control', 'no-store')
+          }
 
           resolve(
             new Response(stream, {

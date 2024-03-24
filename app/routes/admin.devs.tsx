@@ -2,11 +2,13 @@ import {
   json,
   redirect,
   type ActionFunctionArgs,
+  type HeadersArgs,
   type LoaderFunctionArgs,
 } from '@remix-run/node'
 import {Form, useLoaderData, useNavigation} from '@remix-run/react'
 import {and, desc, eq, inArray, like} from 'drizzle-orm'
 import {AlignLeft, ArrowUpRight, CalendarDays} from 'lucide-react'
+import {cacheHeader} from 'pretty-cache-header'
 import {AdminFilters} from '~/components/admin-filters'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
 import {Badge} from '~/components/ui/badge'
@@ -23,6 +25,10 @@ import {devs, type Expertise} from '~/db/schema'
 import {classNames} from '~/utils/misc'
 import {destroySession, getSession} from '~/utils/session.server'
 
+export function headers({loaderHeaders}: HeadersArgs) {
+  return {'Cache-Control': loaderHeaders.get('Cache-Control')}
+}
+
 export async function loader({request}: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const query = url.searchParams.get('query')
@@ -38,7 +44,16 @@ export async function loader({request}: LoaderFunctionArgs) {
     )
     .orderBy(desc(devs.createdAt))
     .all()
-  return json({data})
+  const headers = {
+    'Cache-Control': cacheHeader({
+      public: true,
+      maxAge: '10mins',
+      sMaxage: '3days',
+      staleWhileRevalidate: '1year',
+      staleIfError: '1year',
+    }),
+  }
+  return json({data}, {headers})
 }
 
 export async function action({request}: ActionFunctionArgs) {
