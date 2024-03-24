@@ -87,7 +87,7 @@ export async function action({request}: ActionFunctionArgs) {
     }
 
     case 'edit': {
-      throw redirect(`/nominees/${nomineeId}`)
+      throw redirect(`/edit/nominees/${nomineeId}`)
     }
 
     default: {

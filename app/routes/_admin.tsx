@@ -16,7 +16,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function AdminLayout() {
   return (
-    <div className="mx-auto max-w-screen-md">
+    <div className="mx-auto w-full max-w-screen-md">
       <Outlet />
     </div>
   )

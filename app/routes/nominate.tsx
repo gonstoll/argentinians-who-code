@@ -30,7 +30,7 @@ import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {expertise, nominees, provinces} from '~/db/schema'
 
-const schema = z.object({
+export const schema = z.object({
   name: z
     .string({required_error: 'Please provide the nominee’s name'})
     .min(1, {message: 'Name should have at least 2 (two) characters'})
@@ -176,7 +176,7 @@ export default function Nominate() {
             {...getSelectProps(fields.from)}
             defaultValue={fields.from.initialValue}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger id={fields.from.id} className="w-full">
               <SelectValue placeholder="Select a city" />
             </SelectTrigger>
             <SelectContent>
@@ -196,7 +196,7 @@ export default function Nominate() {
             {...getSelectProps(fields.expertise)}
             defaultValue={fields.expertise.initialValue}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger id={fields.expertise.id} className="w-full">
               <SelectValue placeholder="Select an area of expertise" />
             </SelectTrigger>
             <SelectContent>

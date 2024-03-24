@@ -5,7 +5,7 @@ import {
   type LoaderFunctionArgs,
 } from '@remix-run/node'
 import {Form, useLoaderData, useNavigation} from '@remix-run/react'
-import {and, asc, eq, inArray, like} from 'drizzle-orm'
+import {and, desc, eq, inArray, like} from 'drizzle-orm'
 import {AlignLeft, ArrowUpRight, CalendarDays} from 'lucide-react'
 import {AdminFilters} from '~/components/admin-filters'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
@@ -36,7 +36,7 @@ export async function loader({request}: LoaderFunctionArgs) {
         filters.length ? inArray(devs.expertise, filters) : undefined,
       ),
     )
-    .orderBy(asc(devs.createdAt))
+    .orderBy(desc(devs.createdAt))
     .all()
   return json({data})
 }
@@ -81,7 +81,7 @@ export async function action({request}: ActionFunctionArgs) {
     }
 
     case 'edit': {
-      throw redirect(`/devs/${devId}`)
+      throw redirect(`/edit/devs/${devId}`)
     }
 
     default: {
