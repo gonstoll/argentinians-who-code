@@ -81,7 +81,7 @@ export async function action({request}: ActionFunctionArgs) {
     }
 
     case 'edit': {
-      throw redirect(`/edit/devs/${devId}`)
+      throw redirect(`/admin/devs/${devId}`)
     }
 
     default: {

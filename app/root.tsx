@@ -211,19 +211,22 @@ function Header({isAdmin = false}: {isAdmin: boolean}) {
                       asChild
                       className={classNames(
                         'block h-10 cursor-pointer px-4 py-2 text-sm text-primary underline-offset-4 hover:underline',
-                        {underline: location.pathname.includes('/nominees')},
+                        {
+                          underline:
+                            location.pathname.includes('/admin/nominees'),
+                        },
                       )}
                     >
-                      <NavLink to="/nominees">Nominees</NavLink>
+                      <NavLink to="/admin/nominees">Nominees</NavLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       asChild
                       className={classNames(
                         'block h-10 cursor-pointer px-4 py-2 text-sm text-primary underline-offset-4 hover:underline',
-                        {underline: location.pathname.includes('/devs')},
+                        {underline: location.pathname.includes('/admin/devs')},
                       )}
                     >
-                      <NavLink to="/devs">Devs</NavLink>
+                      <NavLink to="/admin/devs">Devs</NavLink>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Form method="POST" className="pl-2">
@@ -285,19 +288,19 @@ function Header({isAdmin = false}: {isAdmin: boolean}) {
                   asChild
                   className={classNames(
                     'block h-10 cursor-pointer px-4 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline',
-                    {underline: location.pathname.includes('/nominees')},
+                    {underline: location.pathname.includes('/admin/nominees')},
                   )}
                 >
-                  <NavLink to="/nominees">Nominees</NavLink>
+                  <NavLink to="/admin/nominees">Nominees</NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   asChild
                   className={classNames(
                     'block h-10 cursor-pointer px-4 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline',
-                    {underline: location.pathname.includes('/devs')},
+                    {underline: location.pathname.includes('/admin/devs')},
                   )}
                 >
-                  <NavLink to="/devs">Devs</NavLink>
+                  <NavLink to="/admin/devs">Devs</NavLink>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>

@@ -13,6 +13,7 @@ import {
   redirect,
   useActionData,
   useLoaderData,
+  useLocation,
   useNavigation,
   useParams,
 } from '@remix-run/react'
@@ -30,7 +31,6 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
@@ -38,6 +38,7 @@ import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {devs, expertise, nominees, provinces} from '~/db/schema'
 import {schema} from './nominate'
+import {GeneralErrorBoundary} from '~/components/error-boundary'
 
 export async function loader({params}: LoaderFunctionArgs) {
   const type = params.type
@@ -45,7 +46,6 @@ export async function loader({params}: LoaderFunctionArgs) {
 
   switch (type) {
     case 'nominees': {
-      // TODO: Figure out how to convert this array to a single object
       const nominee = await db
         .select()
         .from(nominees)
@@ -74,6 +74,7 @@ export async function action({request, params}: LoaderFunctionArgs) {
   const id = params.id
   const formData = await request.formData()
   const result = parseWithZod(formData, {schema})
+  const redirectUrl = `/admin/${type}`
 
   if (result.status !== 'success') {
     return json(
@@ -97,7 +98,7 @@ export async function action({request, params}: LoaderFunctionArgs) {
           .update(nominees)
           .set(result.value)
           .where(eq(nominees.id, Number(id)))
-        return redirect('/nominees')
+        return redirect(redirectUrl)
       } catch (error) {
         return json(
           {
@@ -117,7 +118,7 @@ export async function action({request, params}: LoaderFunctionArgs) {
           .update(devs)
           .set(result.value)
           .where(eq(devs.id, Number(id)))
-        return redirect('/devs')
+        return redirect(redirectUrl)
       } catch (error) {
         return json(
           {
@@ -132,7 +133,7 @@ export async function action({request, params}: LoaderFunctionArgs) {
       }
     }
     default: {
-      throw new Response('Invalid type', {status: 404})
+      throw new Response('Invalid type parameter', {status: 404})
     }
   }
 }
@@ -270,5 +271,24 @@ export default function EditPage() {
         </Card>
       </Form>
     </div>
+  )
+}
+
+export function ErrorBoundary() {
+  const location = useLocation()
+  return (
+    <GeneralErrorBoundary
+      statusHandlers={{
+        429: () => <p>You made too many submissions. Try again later!</p>,
+        404: () => (
+          <>
+            <p className="text-muted-foreground">We can't find this page:</p>
+            <pre className="rounded-sm bg-secondary px-4 py-2 text-muted-foreground">
+              {location.pathname}
+            </pre>
+          </>
+        ),
+      }}
+    />
   )
 }
