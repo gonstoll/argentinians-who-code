@@ -114,7 +114,7 @@ function handleBrowserRequest(
 
           responseHeaders.set('Content-Type', 'text/html')
 
-          if (process.env.NODE_ENV !== 'production' {
+          if (process.env.NODE_ENV !== 'production') {
             responseHeaders.set('Cache-Control', 'no-store')
           }
 
