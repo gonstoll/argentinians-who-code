@@ -54,7 +54,7 @@ export function links(): Array<LinkDescriptor> {
     },
     {
       rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400..800&display=swap',
+      href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&display=swap',
     },
   ]
 }
