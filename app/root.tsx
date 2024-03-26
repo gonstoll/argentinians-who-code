@@ -121,13 +121,17 @@ function Document({
     <html lang="en" className={cn(theme, 'h-full')}>
       <head>
         <ClientHintCheck nonce={nonce} />
+        <Meta />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="color-scheme"
           content={theme === 'dark' ? 'dark light' : 'light dark'}
         />
-        <Meta />
+        <meta
+          name="theme-color"
+          content={theme === 'dark' ? '#0c0a09' : '#ffffff'}
+        />
         <Links />
       </head>
       <body className="flex h-full flex-col bg-background font-mono text-sm text-foreground">

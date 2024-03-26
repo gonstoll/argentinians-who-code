@@ -8,7 +8,7 @@ export function meta(): Array<MetaDescriptor> {
 export default function About() {
   return (
     <section>
-      <Hero />
+      <Hero subtitle="is a place to showcase talented Argentinian developers that are spread around the world." />
       <h1>About</h1>
     </section>
   )
