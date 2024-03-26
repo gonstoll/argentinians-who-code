@@ -13,6 +13,7 @@ import {ArrowUpDown, ArrowUpRight} from 'lucide-react'
 import {cacheHeader} from 'pretty-cache-header'
 import * as React from 'react'
 import {ExpertiseFilters} from '~/components/expertise-filters'
+import {Hero} from '~/components/hero'
 import {Badge} from '~/components/ui/badge'
 import {
   Table,
@@ -107,6 +108,7 @@ export default function Index() {
 
   return (
     <section>
+      <Hero />
       {listHasItems ? (
         <div className="mb-4 inline-block md:float-right">
           <ExpertiseFilters />
@@ -130,7 +132,7 @@ function DataTable({data}: {data: Array<Dev>}) {
 
   return (
     <Table>
-      <TableHeader className="sticky top-0 bg-background">
+      <TableHeader>
         {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map(header => {
