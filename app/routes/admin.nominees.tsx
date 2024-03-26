@@ -102,12 +102,12 @@ export async function action({request}: ActionFunctionArgs) {
     case 'approve': {
       await db.insert(devs).values(nominee)
       await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
-      return null
+      return json(null, {status: 201})
     }
 
     case 'delete': {
       await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
-      return null
+      return json(null, {status: 204})
     }
 
     case 'edit': {

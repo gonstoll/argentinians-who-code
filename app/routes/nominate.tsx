@@ -132,7 +132,7 @@ export async function action({request}: LoaderFunctionArgs) {
 
   return json(
     {status: 'success' as const, result: result.reply({resetForm: true})},
-    {status: 200},
+    {status: 201},
   )
 }
 
