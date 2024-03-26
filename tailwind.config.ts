@@ -85,6 +85,13 @@ const config = {
           DEFAULT: 'hsl(var(--qa))',
           foreground: 'hsl(var(--qa-foreground))',
         },
+        hero: {
+          DEFAULT: 'hsl(var(--hero))',
+          foreground: 'hsl(var(--hero-foreground))',
+        },
+        gradient: {
+          DEFAULT: 'hsl(var(--gradient))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

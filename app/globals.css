@@ -34,17 +34,18 @@
 
     --radius: 0.5rem;
 
-    --frontend: 0 72.2% 50.6%;
-    --frontend-foreground: 0 85.7% 97.3%;
+    /* Custom colors */
+    --gradient: 221 83% 53%;
 
-    --backend: 142.1 76.2% 36.3%;
-    --backend-foreground: 355.7 100% 97.3%;
+    --hero: 217 91.22% 59.8%;
 
-    --fullstack: 262.1 83.3% 57.8%;
-    --fullstack-foreground: 210 20% 98%;
+    --frontend: 0 84% 60%;
 
-    --qa: 47.9 95.8% 53.1%;
-    --qa-foreground: 26 83.3% 14.1%;
+    --backend: 142 76% 36%;
+
+    --fullstack: 243 75% 59%;
+
+    --qa: 38 92% 50%;
   }
 
   .dark {
@@ -76,20 +77,18 @@
     --input: 12 6.5% 15.1%;
     --ring: 24 5.7% 82.9%;
 
-    /* --frontend: 0 72.2% 50.6%; */
-    /* --frontend-foreground: 0 85.7% 97.3%; */
+    /* Custom colors */
+    --gradient: 213 94% 68%;
+
+    --hero: 213 93.9% 67.84%;
+
     --frontend: 0 90.6% 70.8%;
 
-    /* --backend: 142.1 70.6% 45.3%; */
-    /* --backend-foreground: 144.9 80.4% 10%; */
     --backend: 142 69.1% 58%;
 
-    /* --fullstack: 263.4 70% 50.4%; */
-    /* --fullstack-foreground: 210 20% 98%; */
     --fullstack: 234 89.4% 73.9%;
 
     --qa: 47.9 95.8% 53.1%;
-    --qa-foreground: 26 83.3% 14.1%;
   }
 }
 

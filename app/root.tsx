@@ -130,7 +130,7 @@ function Document({
         <Meta />
         <Links />
       </head>
-      <body className="flex h-full flex-col bg-background font-mono text-foreground">
+      <body className="flex h-full flex-col bg-background font-mono text-sm text-foreground">
         <Analytics />
         <Header isAdmin={isAdmin} />
         {children}
@@ -329,7 +329,7 @@ export default function App() {
 
   return (
     <Document theme={theme} nonce={nonce} isAdmin={data.isAdmin}>
-      <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col p-4">
+      <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col px-4">
         <Outlet />
       </main>
       <script

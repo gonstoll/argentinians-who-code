@@ -19,6 +19,7 @@ import {useSpinDelay} from 'spin-delay'
 import {z} from 'zod'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
 import {ErrorList} from '~/components/error-list'
+import {Hero} from '~/components/hero'
 import {Alert, AlertDescription, AlertTitle} from '~/components/ui/alert'
 import {Badge} from '~/components/ui/badge'
 import {Button} from '~/components/ui/button'
@@ -151,100 +152,103 @@ export default function Nominate() {
   })
 
   return (
-    <Form method="post" {...getFormProps(form)}>
-      {form.errors?.length ? (
+    <section>
+      <Hero />
+      <Form method="post" {...getFormProps(form)}>
+        {form.errors?.length ? (
+          <div className="mb-4">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Something went wrong</AlertTitle>
+              <AlertDescription>
+                <ErrorList id={form.errorId} errors={form.errors} />
+              </AlertDescription>
+            </Alert>
+          </div>
+        ) : null}
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="mb-4 flex flex-col gap-2">
+            <Label htmlFor={fields.name.id}>Name</Label>
+            <Input {...getInputProps(fields.name, {type: 'text'})} autoFocus />
+            <ErrorList id={fields.name.id} errors={fields.name.errors} />
+          </div>
+
+          <div className="mb-4 flex flex-col gap-2">
+            <Label htmlFor={fields.link.id}>Link</Label>
+            <Input {...getInputProps(fields.link, {type: 'text'})} />
+            <ErrorList id={fields.link.id} errors={fields.link.errors} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="mb-4 flex flex-col gap-2">
+            <Label htmlFor={fields.from.id}>From</Label>
+            <Select
+              {...getSelectProps(fields.from)}
+              defaultValue={fields.from.initialValue}
+            >
+              <SelectTrigger id={fields.from.id} className="w-full">
+                <SelectValue placeholder="Select a city" />
+              </SelectTrigger>
+              <SelectContent>
+                {provinces.map(p => (
+                  <SelectItem key={p} value={p}>
+                    {p}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <ErrorList id={fields.from.id} errors={fields.from.errors} />
+          </div>
+
+          <div className="mb-4 flex flex-col gap-2">
+            <Label htmlFor={fields.expertise.id}>Expertise</Label>
+            <Select
+              {...getSelectProps(fields.expertise)}
+              defaultValue={fields.expertise.initialValue}
+            >
+              <SelectTrigger id={fields.expertise.id} className="w-full">
+                <SelectValue placeholder="Select an area of expertise" />
+              </SelectTrigger>
+              <SelectContent>
+                {expertise.map(p => (
+                  <SelectItem key={p} value={p}>
+                    <Badge variant={p}>• {p}</Badge>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <ErrorList
+              id={fields.expertise.id}
+              errors={fields.expertise.errors}
+            />
+          </div>
+        </div>
+
         <div className="mb-4">
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Something went wrong</AlertTitle>
-            <AlertDescription>
-              <ErrorList id={form.errorId} errors={form.errors} />
-            </AlertDescription>
-          </Alert>
-        </div>
-      ) : null}
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="mb-4 flex flex-col gap-2">
-          <Label htmlFor={fields.name.id}>Name</Label>
-          <Input {...getInputProps(fields.name, {type: 'text'})} autoFocus />
-          <ErrorList id={fields.name.id} errors={fields.name.errors} />
+          <Label htmlFor={fields.reason.id}>
+            Why do you want to nominate them?
+          </Label>
+          <Textarea {...getTextareaProps(fields.reason)} />
+          <p className="mt-2 text-xs text-muted-foreground">
+            Your explanation should have at least 70 (seventy) characters and at
+            most 300 (three hundred) characters long.
+          </p>
+          <ErrorList id={fields.reason.id} errors={fields.reason.errors} />
         </div>
 
-        <div className="mb-4 flex flex-col gap-2">
-          <Label htmlFor={fields.link.id}>Link</Label>
-          <Input {...getInputProps(fields.link, {type: 'text'})} />
-          <ErrorList id={fields.link.id} errors={fields.link.errors} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="mb-4 flex flex-col gap-2">
-          <Label htmlFor={fields.from.id}>From</Label>
-          <Select
-            {...getSelectProps(fields.from)}
-            defaultValue={fields.from.initialValue}
-          >
-            <SelectTrigger id={fields.from.id} className="w-full">
-              <SelectValue placeholder="Select a city" />
-            </SelectTrigger>
-            <SelectContent>
-              {provinces.map(p => (
-                <SelectItem key={p} value={p}>
-                  {p}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <ErrorList id={fields.from.id} errors={fields.from.errors} />
-        </div>
-
-        <div className="mb-4 flex flex-col gap-2">
-          <Label htmlFor={fields.expertise.id}>Expertise</Label>
-          <Select
-            {...getSelectProps(fields.expertise)}
-            defaultValue={fields.expertise.initialValue}
-          >
-            <SelectTrigger id={fields.expertise.id} className="w-full">
-              <SelectValue placeholder="Select an area of expertise" />
-            </SelectTrigger>
-            <SelectContent>
-              {expertise.map(p => (
-                <SelectItem key={p} value={p}>
-                  <Badge variant={p}>• {p}</Badge>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <ErrorList
-            id={fields.expertise.id}
-            errors={fields.expertise.errors}
-          />
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <Label htmlFor={fields.reason.id}>
-          Why do you want to nominate them?
-        </Label>
-        <Textarea {...getTextareaProps(fields.reason)} />
-        <p className="mt-2 text-xs text-muted-foreground">
-          Your explanation should have at least 70 (seventy) characters and at
-          most 300 (three hundred) characters long.
-        </p>
-        <ErrorList id={fields.reason.id} errors={fields.reason.errors} />
-      </div>
-
-      <Button
-        className="w-full"
-        variant="default"
-        type="submit"
-        disabled={submitting || showSpinner}
-      >
-        {showSpinner ? <Loader2 className="mr-2 animate-spin" /> : null}
-        Submit
-      </Button>
-    </Form>
+        <Button
+          className="w-full"
+          variant="default"
+          type="submit"
+          disabled={submitting || showSpinner}
+        >
+          {showSpinner ? <Loader2 className="mr-2 animate-spin" /> : null}
+          Submit
+        </Button>
+      </Form>
+    </section>
   )
 }
 
