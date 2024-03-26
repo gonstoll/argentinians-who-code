@@ -8,6 +8,7 @@ import {
   useActionData,
   useNavigation,
   useSearchParams,
+  type MetaDescriptor,
 } from '@remix-run/react'
 import bcrypt from 'bcryptjs'
 import {eq} from 'drizzle-orm'
@@ -21,6 +22,10 @@ import {Label} from '~/components/ui/label'
 import {db} from '~/db'
 import {users} from '~/db/schema'
 import {commitSession, getSession} from '~/utils/session.server'
+
+export function meta(): Array<MetaDescriptor> {
+  return [{title: 'AWC | Login'}]
+}
 
 export const schema = z.object({
   redirectTo: z.string().optional(),

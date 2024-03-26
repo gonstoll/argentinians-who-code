@@ -1,5 +1,9 @@
-import {Link} from '@remix-run/react'
+import {Link, type MetaDescriptor} from '@remix-run/react'
 import {buttonVariants} from '~/components/ui/button'
+
+export function meta(): Array<MetaDescriptor> {
+  return [{title: 'AWC | Admin'}]
+}
 
 export default function AdminIndex() {
   return (

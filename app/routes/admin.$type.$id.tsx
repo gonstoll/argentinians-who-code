@@ -16,10 +16,13 @@ import {
   useLocation,
   useNavigation,
   useParams,
+  type MetaArgs,
+  type MetaDescriptor,
 } from '@remix-run/react'
 import {eq} from 'drizzle-orm'
 import {AlertCircle, AlignLeft, ArrowUpRight, Loader2} from 'lucide-react'
 import {useSpinDelay} from 'spin-delay'
+import {GeneralErrorBoundary} from '~/components/error-boundary'
 import {ErrorList} from '~/components/error-list'
 import {Alert, AlertDescription, AlertTitle} from '~/components/ui/alert'
 import {Badge} from '~/components/ui/badge'
@@ -38,7 +41,11 @@ import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {devs, expertise, nominees, provinces} from '~/db/schema'
 import {schema} from './nominate'
-import {GeneralErrorBoundary} from '~/components/error-boundary'
+
+export function meta(args: MetaArgs<typeof loader>): Array<MetaDescriptor> {
+  const type = args.params.type
+  return [{title: `AWC | Admin - Edit ${type}`}]
+}
 
 export async function loader({params}: LoaderFunctionArgs) {
   const type = params.type
@@ -51,7 +58,7 @@ export async function loader({params}: LoaderFunctionArgs) {
         .from(nominees)
         .where(eq(nominees.id, Number(id)))
         .then(v => v[0])
-      return json({type, data: nominee})
+      return json({data: nominee})
     }
 
     case 'devs': {
@@ -60,7 +67,7 @@ export async function loader({params}: LoaderFunctionArgs) {
         .from(devs)
         .where(eq(devs.id, Number(id)))
         .then(v => v[0])
-      return json({type, data: dev})
+      return json({data: dev})
     }
 
     default: {

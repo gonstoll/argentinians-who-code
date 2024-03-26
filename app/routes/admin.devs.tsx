@@ -5,7 +5,12 @@ import {
   type HeadersArgs,
   type LoaderFunctionArgs,
 } from '@remix-run/node'
-import {Form, useLoaderData, useNavigation} from '@remix-run/react'
+import {
+  Form,
+  useLoaderData,
+  useNavigation,
+  type MetaDescriptor,
+} from '@remix-run/react'
 import {and, desc, eq, inArray, like} from 'drizzle-orm'
 import {AlignLeft, ArrowUpRight, CalendarDays} from 'lucide-react'
 import {cacheHeader} from 'pretty-cache-header'
@@ -24,6 +29,10 @@ import {db} from '~/db'
 import {devs, type Expertise} from '~/db/schema'
 import {classNames} from '~/utils/misc'
 import {destroySession, getSession} from '~/utils/session.server'
+
+export function meta(): Array<MetaDescriptor> {
+  return [{title: 'AWC | Admin - Devs'}]
+}
 
 export function headers({loaderHeaders}: HeadersArgs) {
   return {'Cache-Control': loaderHeaders.get('Cache-Control')}

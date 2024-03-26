@@ -7,7 +7,12 @@ import {
 } from '@conform-to/react'
 import {getZodConstraint, parseWithZod} from '@conform-to/zod'
 import {json, type LoaderFunctionArgs} from '@remix-run/node'
-import {Form, useActionData, useNavigation} from '@remix-run/react'
+import {
+  Form,
+  useActionData,
+  useNavigation,
+  type MetaDescriptor,
+} from '@remix-run/react'
 import {AlertCircle, Loader2} from 'lucide-react'
 import {Resend} from 'resend'
 import {useSpinDelay} from 'spin-delay'
@@ -29,6 +34,10 @@ import {
 import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {expertise, nominees, provinces} from '~/db/schema'
+
+export function meta(): Array<MetaDescriptor> {
+  return [{title: 'AWC | Nominate'}]
+}
 
 export const schema = z.object({
   name: z

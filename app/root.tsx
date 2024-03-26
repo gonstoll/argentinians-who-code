@@ -61,7 +61,7 @@ export function links(): Array<LinkDescriptor> {
 
 export function meta(): Array<MetaDescriptor> {
   return [
-    {title: 'Argentinians who code'},
+    {title: 'AWC | Argentinians who code'},
     {
       name: 'description',
       content:
