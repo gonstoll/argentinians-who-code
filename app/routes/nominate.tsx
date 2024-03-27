@@ -231,7 +231,7 @@ export default function Nominate() {
             Why do you want to nominate them?
           </Label>
           <Textarea {...getTextareaProps(fields.reason)} />
-          <p className="mt-2 text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             Your explanation should have at least 70 (seventy) characters and at
             most 300 (three hundred) characters long.
           </p>
