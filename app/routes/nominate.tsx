@@ -226,7 +226,7 @@ export default function Nominate() {
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col gap-2">
           <Label htmlFor={fields.reason.id}>
             Why do you want to nominate them?
           </Label>
