@@ -21,6 +21,8 @@ import {
 } from '@remix-run/react'
 import {Analytics} from '@vercel/analytics/react'
 import {CornerRightDown, CornerRightUp, Loader2, Menu, X} from 'lucide-react'
+import * as React from 'react'
+import {Toaster, toast} from 'sonner'
 import {GeneralErrorBoundary} from './components/error-boundary'
 import {Button, buttonVariants} from './components/ui/button'
 import {
@@ -40,7 +42,7 @@ import {ClientHintCheck, getHints} from './utils/client-hints'
 import {getEnv} from './utils/env.server'
 import {classNames} from './utils/misc'
 import {useNonce} from './utils/nonce-provider'
-import {destroySession, getSession} from './utils/session.server'
+import {commitSession, destroySession, getSession} from './utils/session.server'
 import {getTheme, type Theme} from './utils/theme.server'
 
 export function links(): Array<LinkDescriptor> {
@@ -78,12 +80,17 @@ export function meta(): Array<MetaDescriptor> {
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get('cookie'))
   const userId = session.get('userId')
-  return json({
-    isAdmin: Boolean(userId),
-    hints: getHints(request),
-    theme: getTheme(request),
-    ENV: getEnv(),
-  })
+  const message = session.get('message')
+  return json(
+    {
+      isAdmin: Boolean(userId),
+      hints: getHints(request),
+      theme: getTheme(request),
+      ENV: getEnv(),
+      message,
+    },
+    {headers: {'set-cookie': await commitSession(session)}},
+  )
 }
 
 export async function action({request}: ActionFunctionArgs) {
@@ -331,11 +338,25 @@ export default function App() {
   const theme = useTheme()
   const nonce = useNonce()
 
+  React.useEffect(() => {
+    if (!data.message) return
+    if (data.message.type === 'error') {
+      toast.error(data.message.content)
+    } else {
+      toast.success(data.message.content)
+    }
+  }, [data.message])
+
   return (
     <Document theme={theme} nonce={nonce} isAdmin={data.isAdmin}>
       <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col px-4">
         <Outlet />
       </main>
+      <Toaster
+        position="bottom-right"
+        theme={theme}
+        toastOptions={{closeButton: true}}
+      />
       <script
         dangerouslySetInnerHTML={{
           __html: `window.ENV = ${JSON.stringify(data.ENV)}`,

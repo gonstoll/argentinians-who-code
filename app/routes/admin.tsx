@@ -1,6 +1,6 @@
 import {redirect, type LoaderFunctionArgs} from '@remix-run/node'
 import {Outlet} from '@remix-run/react'
-import {getSession} from '~/utils/session.server'
+import {commitSession, getSession} from '~/utils/session.server'
 
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get('cookie'))
@@ -9,7 +9,13 @@ export async function loader({request}: LoaderFunctionArgs) {
     const searchParams = new URLSearchParams([
       ['redirectTo', new URL(request.url).pathname],
     ])
-    throw redirect(`/login?${searchParams}`)
+    session.flash('message', {
+      type: 'error',
+      content: 'You must be logged in to access the admin area.',
+    })
+    throw redirect(`/login?${searchParams}`, {
+      headers: {'set-cookie': await commitSession(session)},
+    })
   }
   return null
 }

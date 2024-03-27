@@ -5,7 +5,10 @@ export type SessionData = {
 }
 
 export type SessionFlashData = {
-  error: string
+  message: {
+    type: 'success' | 'error'
+    content: string
+  }
 }
 
 export const {getSession, commitSession, destroySession} =
