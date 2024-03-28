@@ -28,7 +28,7 @@ import {
 import {db} from '~/db'
 import {devs, nominees, type Expertise} from '~/db/schema'
 import {classNames} from '~/utils/misc'
-import {destroySession, getSession} from '~/utils/session.server'
+import {commitSession, destroySession, getSession} from '~/utils/session.server'
 
 export function meta(): Array<MetaDescriptor> {
   return [{title: 'AWC | Admin - Nominees'}]
@@ -102,12 +102,26 @@ export async function action({request}: ActionFunctionArgs) {
     case 'approve': {
       await db.insert(devs).values(nominee)
       await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
-      return json(null, {status: 201})
+      session.flash('message', {
+        type: 'success',
+        content: 'Nominee approved successfully',
+      })
+      return json(null, {
+        status: 201,
+        headers: {'set-cookie': await commitSession(session)},
+      })
     }
 
     case 'delete': {
       await db.delete(nominees).where(eq(nominees.id, Number(nomineeId)))
-      return json(null, {status: 204})
+      session.flash('message', {
+        type: 'success',
+        content: 'Nominee deleted successfully',
+      })
+      return json(null, {
+        status: 204,
+        headers: {'set-cookie': await commitSession(session)},
+      })
     }
 
     case 'edit': {
@@ -223,9 +237,7 @@ export function ErrorBoundary() {
     <GeneralErrorBoundary
       statusHandlers={{
         400: () => (
-          <p className="text-muted-foreground">
-            Invalid attempt, please try again later
-          </p>
+          <p className="text-center">Invalid attempt, please try again later</p>
         ),
       }}
     />

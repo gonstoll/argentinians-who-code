@@ -28,7 +28,7 @@ import {
 import {db} from '~/db'
 import {devs, type Expertise} from '~/db/schema'
 import {classNames} from '~/utils/misc'
-import {destroySession, getSession} from '~/utils/session.server'
+import {commitSession, destroySession, getSession} from '~/utils/session.server'
 
 export function meta(): Array<MetaDescriptor> {
   return [{title: 'AWC | Admin - Devs'}]
@@ -101,7 +101,14 @@ export async function action({request}: ActionFunctionArgs) {
   switch (intent) {
     case 'delete': {
       await db.delete(devs).where(eq(devs.id, Number(devId)))
-      return null
+      session.flash('message', {
+        type: 'success',
+        content: 'Dev deleted successfully',
+      })
+      return json(null, {
+        status: 204,
+        headers: {'set-cookie': await commitSession(session)},
+      })
     }
 
     case 'edit': {
@@ -208,9 +215,7 @@ export function ErrorBoundary() {
     <GeneralErrorBoundary
       statusHandlers={{
         400: () => (
-          <p className="text-muted-foreground">
-            Invalid attempt, please try again later
-          </p>
+          <p className="text-center">Invalid attempt, please try again later</p>
         ),
       }}
     />

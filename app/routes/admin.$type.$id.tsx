@@ -13,7 +13,6 @@ import {
   redirect,
   useActionData,
   useLoaderData,
-  useLocation,
   useNavigation,
   useParams,
   type MetaArgs,
@@ -40,6 +39,7 @@ import {
 import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {devs, expertise, nominees, provinces} from '~/db/schema'
+import {commitSession, getSession} from '~/utils/session.server'
 import {schema} from './nominate'
 
 export function meta(args: MetaArgs<typeof loader>): Array<MetaDescriptor> {
@@ -58,6 +58,9 @@ export async function loader({params}: LoaderFunctionArgs) {
         .from(nominees)
         .where(eq(nominees.id, Number(id)))
         .then(v => v[0])
+      if (!nominee) {
+        throw new Response(`Nominee with id ${id} was not found`, {status: 404})
+      }
       return json({data: nominee})
     }
 
@@ -67,16 +70,23 @@ export async function loader({params}: LoaderFunctionArgs) {
         .from(devs)
         .where(eq(devs.id, Number(id)))
         .then(v => v[0])
+      if (!dev) {
+        throw new Response(`Dev with id ${id} was not found`, {status: 404})
+      }
       return json({data: dev})
     }
 
     default: {
-      throw new Response('Invalid type', {status: 404})
+      throw new Response(
+        `Invalid type "${type}". Did you mean "nominees" or "devs"?`,
+        {status: 404},
+      )
     }
   }
 }
 
 export async function action({request, params}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get('cookie'))
   const type = params.type
   const id = params.id
   const formData = await request.formData()
@@ -105,7 +115,13 @@ export async function action({request, params}: LoaderFunctionArgs) {
           .update(nominees)
           .set(result.value)
           .where(eq(nominees.id, Number(id)))
-        return redirect(redirectUrl)
+        session.flash('message', {
+          type: 'success',
+          content: 'Nominee updated successfully',
+        })
+        return redirect(redirectUrl, {
+          headers: {'set-cookie': await commitSession(session)},
+        })
       } catch (error) {
         return json(
           {
@@ -125,7 +141,13 @@ export async function action({request, params}: LoaderFunctionArgs) {
           .update(devs)
           .set(result.value)
           .where(eq(devs.id, Number(id)))
-        return redirect(redirectUrl)
+        session.flash('message', {
+          type: 'success',
+          content: 'Dev updated successfully',
+        })
+        return redirect(redirectUrl, {
+          headers: {'set-cookie': await commitSession(session)},
+        })
       } catch (error) {
         return json(
           {
@@ -282,20 +304,14 @@ export default function EditPage() {
 }
 
 export function ErrorBoundary() {
-  const location = useLocation()
   return (
-    <GeneralErrorBoundary
-      statusHandlers={{
-        429: () => <p>You made too many submissions. Try again later!</p>,
-        404: () => (
-          <>
-            <p className="text-muted-foreground">We can't find this page:</p>
-            <pre className="rounded-sm bg-secondary px-4 py-2 text-muted-foreground">
-              {location.pathname}
-            </pre>
-          </>
-        ),
-      }}
-    />
+    <div className="flex h-full">
+      <GeneralErrorBoundary
+        statusHandlers={{
+          429: () => <p>You made too many submissions. Try again later!</p>,
+          404: ({error}) => <p>{error.data}</p>,
+        }}
+      />
+    </div>
   )
 }

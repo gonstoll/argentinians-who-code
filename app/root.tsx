@@ -348,11 +348,7 @@ export default function App() {
       <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col px-4">
         <Outlet />
       </main>
-      <Toaster
-        position="bottom-right"
-        theme={theme}
-        toastOptions={{closeButton: true}}
-      />
+      <Toaster theme={theme} position="bottom-right" />
       <script
         dangerouslySetInnerHTML={{
           __html: `window.ENV = ${JSON.stringify(data.ENV)}`,

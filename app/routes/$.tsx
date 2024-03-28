@@ -18,7 +18,7 @@ export function ErrorBoundary() {
       statusHandlers={{
         404: () => (
           <>
-            <p className="text-muted-foreground">We can't find this page:</p>
+            <p className="mb-1 text-center">We can't find this page:</p>
             <pre className="rounded-sm bg-secondary px-4 py-2 text-muted-foreground">
               {location.pathname}
             </pre>

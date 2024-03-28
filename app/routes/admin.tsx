@@ -22,7 +22,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function AdminLayout() {
   return (
-    <div className="mx-auto w-full max-w-screen-md">
+    <div className="mx-auto w-full max-w-screen-md flex-1">
       <Outlet />
     </div>
   )
