@@ -340,11 +340,7 @@ export default function App() {
 
   React.useEffect(() => {
     if (!data.message) return
-    if (data.message.type === 'error') {
-      toast.error(data.message.content)
-    } else {
-      toast.success(data.message.content)
-    }
+    toast[data.message.type](data.message.content)
   }, [data.message])
 
   return (
