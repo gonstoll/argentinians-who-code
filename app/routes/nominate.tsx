@@ -35,6 +35,7 @@ import {
 import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {expertise, nominees, provinces} from '~/db/schema'
+import {commitSession, getSession} from '~/utils/session.server'
 
 export function meta(): Array<MetaDescriptor> {
   return [{title: 'AWC | Nominate'}]
@@ -72,6 +73,7 @@ export const schema = z.object({
 })
 
 export async function action({request}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get('cookie'))
   const formData = await request.formData()
   const result = parseWithZod(formData, {schema})
 
@@ -131,9 +133,14 @@ export async function action({request}: LoaderFunctionArgs) {
     )
   }
 
+  session.flash('message', {
+    type: 'success',
+    content: 'Nomination submitted successfully',
+  })
+
   return json(
     {status: 'success' as const, result: result.reply({resetForm: true})},
-    {status: 201},
+    {status: 201, headers: {'set-cookie': await commitSession(session)}},
   )
 }
 
