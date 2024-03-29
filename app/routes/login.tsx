@@ -73,7 +73,7 @@ export async function action({request}: ActionFunctionArgs) {
       {
         status: 'error',
         result: result.reply({
-          formErrors: ['Incorrect password'],
+          formErrors: ['Email or password are incorrect'],
         }),
       } as const,
       {status: 400},
@@ -82,7 +82,7 @@ export async function action({request}: ActionFunctionArgs) {
 
   const session = await getSession()
   session.set('userId', String(user[0].id))
-  return redirect(redirectTo ?? '/about', {
+  return redirect(redirectTo ?? '/', {
     headers: {
       'set-cookie': await commitSession(session, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
