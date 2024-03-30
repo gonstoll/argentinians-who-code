@@ -167,17 +167,17 @@ function Header({isAdmin = false}: {isAdmin: boolean}) {
       </Link>
 
       {/* Mobile nav */}
-      <nav className="flex items-center sm:hidden">
+      <nav className="flex items-center gap-2 sm:hidden">
         <ThemeSwitch />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="group">
-              <Menu className="hidden h-5 w-5 group-data-[state='closed']:block" />
-              <X className="hidden h-5 w-5 group-data-[state='open']:block" />
+            <Button variant="ghost" className="group h-auto p-0">
+              <Menu className="hidden h-6 w-6 group-data-[state='closed']:block" />
+              <X className="hidden h-6 w-6 group-data-[state='open']:block" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuPortal>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent sideOffset={15} align="end">
               <DropdownMenuItem
                 asChild
                 className={classNames(
