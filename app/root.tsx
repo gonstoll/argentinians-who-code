@@ -161,7 +161,10 @@ function Header({isAdmin = false}: {isAdmin: boolean}) {
 
   return (
     <header className="mx-auto flex w-full max-w-screen-lg items-center justify-between gap-6 p-4">
-      <Link to="/">AWC</Link>
+      <Link to="/" className="flex items-center">
+        AWC
+        <span className="animate-blink-cursor ml-0.5 h-[17px] w-2 bg-foreground" />
+      </Link>
 
       {/* Mobile nav */}
       <nav className="flex items-center sm:hidden">

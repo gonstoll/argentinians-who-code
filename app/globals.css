@@ -100,3 +100,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-blink-cursor {
+  animation: blink 1.5s steps(1) infinite;
+}
