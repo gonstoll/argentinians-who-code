@@ -22,6 +22,11 @@ import {Label} from '~/components/ui/label'
 import {db} from '~/db'
 import {users} from '~/db/schema'
 import {commitSession, getSession} from '~/utils/session.server'
+import type {SiteHandle} from '~/utils/sitemap.server'
+
+export const handle: SiteHandle = {
+  getSitemapEntries: () => null,
+}
 
 export function meta(): Array<MetaDescriptor> {
   return [{title: 'AWC | Login'}]

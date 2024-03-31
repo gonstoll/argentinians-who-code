@@ -40,7 +40,12 @@ import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
 import {devs, expertise, nominees, provinces} from '~/db/schema'
 import {commitSession, getSession} from '~/utils/session.server'
+import type {SiteHandle} from '~/utils/sitemap.server'
 import {schema} from './nominate'
+
+export const handler: SiteHandle = {
+  getSitemapEntries: () => null,
+}
 
 export function meta(args: MetaArgs<typeof loader>): Array<MetaDescriptor> {
   const type = args.params.type

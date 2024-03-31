@@ -29,6 +29,11 @@ import {db} from '~/db'
 import {devs, type Expertise} from '~/db/schema'
 import {classNames} from '~/utils/misc'
 import {commitSession, destroySession, getSession} from '~/utils/session.server'
+import type {SiteHandle} from '~/utils/sitemap.server'
+
+export const handle: SiteHandle = {
+  getSitemapEntries: () => null,
+}
 
 export function meta(): Array<MetaDescriptor> {
   return [{title: 'AWC | Admin - Devs'}]

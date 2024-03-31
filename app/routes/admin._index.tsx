@@ -1,5 +1,10 @@
 import {Link, type MetaDescriptor} from '@remix-run/react'
 import {buttonVariants} from '~/components/ui/button'
+import type {SiteHandle} from '~/utils/sitemap.server'
+
+export const handler: SiteHandle = {
+  getSitemapEntries: () => null,
+}
 
 export function meta(): Array<MetaDescriptor> {
   return [{title: 'AWC | Admin'}]

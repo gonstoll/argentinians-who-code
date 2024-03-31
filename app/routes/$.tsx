@@ -1,5 +1,10 @@
 import {useLocation} from '@remix-run/react'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
+import type {SiteHandle} from '~/utils/sitemap.server'
+
+export const handle: SiteHandle = {
+  getSitemapEntries: () => null,
+}
 
 export async function loader() {
   throw new Response('Not found', {status: 404})

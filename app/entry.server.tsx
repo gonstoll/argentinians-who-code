@@ -8,6 +8,7 @@ import isbot from 'isbot'
 import {PassThrough} from 'node:stream'
 import {renderToPipeableStream} from 'react-dom/server'
 import {getEnv, init} from './utils/env.server'
+import {routes as otherRoutes} from './utils/other-routes.server'
 
 const ABORT_DELAY = 5_000
 init()
@@ -53,7 +54,7 @@ function handleBotRequest(
         abortDelay={ABORT_DELAY}
       />,
       {
-        onAllReady() {
+        async onAllReady() {
           shellRendered = true
           const body = new PassThrough()
           const stream = createReadableStreamFromReadable(body)
@@ -62,6 +63,11 @@ function handleBotRequest(
 
           if (process.env.NODE_ENV !== 'production') {
             responseHeaders.set('Cache-Control', 'no-store')
+          }
+
+          for (const handler of otherRoutes) {
+            const otherRouteResponse = await handler(request, remixContext)
+            if (otherRouteResponse) return otherRouteResponse
           }
 
           resolve(
@@ -107,7 +113,7 @@ function handleBrowserRequest(
         abortDelay={ABORT_DELAY}
       />,
       {
-        onShellReady() {
+        async onShellReady() {
           shellRendered = true
           const body = new PassThrough()
           const stream = createReadableStreamFromReadable(body)
@@ -116,6 +122,11 @@ function handleBrowserRequest(
 
           if (process.env.NODE_ENV !== 'production') {
             responseHeaders.set('Cache-Control', 'no-store')
+          }
+
+          for (const handler of otherRoutes) {
+            const otherRouteResponse = await handler(request, remixContext)
+            if (otherRouteResponse) resolve(otherRouteResponse)
           }
 
           resolve(

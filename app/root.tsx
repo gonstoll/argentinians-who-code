@@ -47,6 +47,19 @@ import {getTheme, type Theme} from './utils/theme.server'
 
 export function links(): Array<LinkDescriptor> {
   return [
+    {
+      rel: 'alternate icon',
+      type: 'image/png',
+      href: '/favicons/favicon-32x32.png',
+    },
+    {rel: 'apple-touch-icon', href: '/favicons/apple-touch-icon.png'},
+    {rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg'},
+    {
+      rel: 'manifest',
+      href: '/site.webmanifest',
+      crossOrigin: 'use-credentials',
+    },
+
     {rel: 'stylesheet', href: styles},
     {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
     {

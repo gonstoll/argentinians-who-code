@@ -1,6 +1,11 @@
 import {redirect, type LoaderFunctionArgs} from '@remix-run/node'
 import {Outlet} from '@remix-run/react'
 import {commitSession, getSession} from '~/utils/session.server'
+import type {SiteHandle} from '~/utils/sitemap.server'
+
+export const handle: SiteHandle = {
+  getSitemapEntries: () => null,
+}
 
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get('cookie'))
