@@ -361,7 +361,7 @@ export default function App() {
 
   return (
     <Document theme={theme} nonce={nonce} isAdmin={data.isAdmin}>
-      <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col px-4">
+      <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col px-4 pb-4">
         <Outlet />
       </main>
       <Toaster theme={theme} position="bottom-right" />
