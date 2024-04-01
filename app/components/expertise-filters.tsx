@@ -1,12 +1,23 @@
 import {useSearchParams} from '@remix-run/react'
+import {ListFilter} from 'lucide-react'
 import {expertise, type Expertise} from '~/db/schema'
-import {classNames} from '~/utils/misc'
+import {cn} from '~/lib/utils'
 import {Badge} from './ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu'
 
-export function ExpertiseFilters() {
+export function ExpertiseFilters({className}: {className?: string}) {
   const [searchParams, setSearchParams] = useSearchParams()
+  // TODO: Change this name once expertise array is renamed
+  const activeExpertises = searchParams.getAll('expertise')
 
-  function handleFilters(expertise: Expertise[number]) {
+  function handleFilter(expertise: Expertise[number]) {
     setSearchParams(
       prev => {
         const expertiseParams = prev.getAll('expertise')
@@ -22,25 +33,26 @@ export function ExpertiseFilters() {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-1 rounded-md border border-border p-3 md:gap-2 md:p-4">
-      {expertise.map(e => {
-        const expertiseSearchParams = searchParams.getAll('expertise')
-        const isActive =
-          expertiseSearchParams.includes(e) || !expertiseSearchParams.length
-
-        return (
-          <Badge
+    <DropdownMenu>
+      <DropdownMenuTrigger className={cn('flex items-center gap-2', className)}>
+        Expertise <ListFilter className="h-4 w-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {expertise.map(e => (
+          <DropdownMenuCheckboxItem
             key={e}
-            variant={e}
-            className={classNames('cursor-pointer', {
-              'opacity-40': !isActive,
-            })}
-            onClick={() => handleFilters(e)}
+            checked={activeExpertises.includes(e)}
+            onCheckedChange={() => handleFilter(e)}
+            className="cursor-pointer"
           >
-            • {e.toLowerCase()}
-          </Badge>
-        )
-      })}
-    </div>
+            <Badge key={e} variant={e}>
+              • {e.toLowerCase()}
+            </Badge>
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

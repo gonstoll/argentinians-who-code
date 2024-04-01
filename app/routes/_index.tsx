@@ -27,7 +27,8 @@ import {db} from '~/db'
 import type {Dev} from '~/db/schema'
 import {devs, type Expertise} from '~/db/schema'
 
-export const columns: Array<ColumnDef<Dev>> = [
+type UserDev = Omit<Dev, 'reason' | 'createdAt'>
+export const columns: Array<ColumnDef<UserDev>> = [
   {accessorKey: 'name', size: 130, header: 'Name'},
   {
     accessorKey: 'from',
@@ -46,15 +47,8 @@ export const columns: Array<ColumnDef<Dev>> = [
   {
     accessorKey: 'expertise',
     size: 130,
-    header({column}) {
-      return (
-        <button
-          className="flex items-center gap-2"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Expertise <ArrowUpDown className="h-4 w-4" />
-        </button>
-      )
+    header() {
+      return <ExpertiseFilters />
     },
     cell({getValue}) {
       const expertise = getValue<Expertise>()
@@ -85,7 +79,13 @@ export async function loader({request}: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const query = url.searchParams.getAll('expertise') as Array<Expertise>
   const data = await db
-    .select()
+    .select({
+      id: devs.id,
+      name: devs.name,
+      from: devs.from,
+      expertise: devs.expertise,
+      link: devs.link,
+    })
     .from(devs)
     .where(query.length ? inArray(devs.expertise, query) : undefined)
     .orderBy(desc(devs.createdAt))
@@ -104,22 +104,16 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
-  const listHasItems = data.length > 0
 
   return (
     <section>
       <Hero />
-      {listHasItems ? (
-        <div className="mb-4 inline-block md:float-right">
-          <ExpertiseFilters />
-        </div>
-      ) : null}
       <DataTable data={data} />
     </section>
   )
 }
 
-function DataTable({data}: {data: Array<Dev>}) {
+function DataTable({data}: {data: Array<UserDev>}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const table = useReactTable({
     data,

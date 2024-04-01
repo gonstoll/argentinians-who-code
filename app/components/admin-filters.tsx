@@ -2,6 +2,7 @@ import {useNavigation, useSearchParams} from '@remix-run/react'
 import {Loader2} from 'lucide-react'
 import * as React from 'react'
 import {ExpertiseFilters} from './expertise-filters'
+import {buttonVariants} from './ui/button'
 import {Input} from './ui/input'
 import {Label} from './ui/label'
 
@@ -32,12 +33,12 @@ export function AdminFilters({type}: {type: 'nominees' | 'devs'}) {
   }
 
   return (
-    <div className="flex flex-wrap-reverse items-start justify-between gap-4">
+    <div className="flex flex-wrap items-end justify-between gap-4">
       <div className="relative min-w-60 flex-1">
         <Label htmlFor="search">
           Search {type === 'nominees' ? 'nominees' : 'devs'}
         </Label>
-        <div className="relative">
+        <div className="relative mt-1">
           <Input
             type="search"
             name="query"
@@ -54,12 +55,7 @@ export function AdminFilters({type}: {type: 'nominees' | 'devs'}) {
         </div>
       </div>
 
-      <div>
-        <p className="mb-1 text-sm font-medium leading-none">
-          Filter by expertise
-        </p>
-        <ExpertiseFilters />
-      </div>
+      <ExpertiseFilters className={buttonVariants({variant: 'outline'})} />
     </div>
   )
 }
