@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -31,13 +32,23 @@ export function ExpertiseFilters({className}: {className?: string}) {
     )
   }
 
+  function handleClear() {
+    setSearchParams(
+      prev => {
+        prev.delete('expertise')
+        return prev
+      },
+      {preventScrollReset: true},
+    )
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={cn('flex items-center gap-2', className)}>
         Expertise <ListFilter className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+        <DropdownMenuLabel className="font-normal">Filter by</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {expertises.map(e => (
           <DropdownMenuCheckboxItem
@@ -51,6 +62,10 @@ export function ExpertiseFilters({className}: {className?: string}) {
             </Badge>
           </DropdownMenuCheckboxItem>
         ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="cursor-pointer" onClick={handleClear}>
+          Clear all
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
