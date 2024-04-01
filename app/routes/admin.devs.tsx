@@ -12,7 +12,7 @@ import {
   type MetaDescriptor,
 } from '@remix-run/react'
 import {and, desc, eq, inArray, like} from 'drizzle-orm'
-import {AlignLeft, ArrowUpRight, CalendarDays} from 'lucide-react'
+import {AlignLeft, ArrowUpRight, CalendarDays, Loader2} from 'lucide-react'
 import {cacheHeader} from 'pretty-cache-header'
 import {AdminFilters} from '~/components/admin-filters'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
@@ -131,6 +131,12 @@ export default function DevsPage() {
   const navigation = useNavigation()
   const loading = navigation.state === 'loading'
 
+  function deleting(nomineeId: number) {
+    const intent = navigation.formData?.get('intent')
+    const id = navigation.formData?.get('nomineeId')
+    return intent === 'delete' && id === String(nomineeId)
+  }
+
   return (
     <div>
       <h1 className="mb-6 scroll-m-20 text-2xl font-extrabold lg:text-3xl">
@@ -204,7 +210,13 @@ export default function DevsPage() {
                   value="delete"
                   variant="destructive"
                 >
-                  Delete
+                  {deleting(d.id) ? (
+                    <>
+                      <Loader2 className="mr-2 animate-spin" /> Deleting...
+                    </>
+                  ) : (
+                    'Approve'
+                  )}
                 </Button>
               </Form>
             </CardFooter>

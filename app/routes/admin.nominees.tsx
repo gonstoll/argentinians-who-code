@@ -12,7 +12,7 @@ import {
   type MetaDescriptor,
 } from '@remix-run/react'
 import {and, asc, eq, inArray, like} from 'drizzle-orm'
-import {AlignLeft, ArrowUpRight, CalendarDays} from 'lucide-react'
+import {AlignLeft, ArrowUpRight, CalendarDays, Loader2} from 'lucide-react'
 import {cacheHeader} from 'pretty-cache-header'
 import {AdminFilters} from '~/components/admin-filters'
 import {GeneralErrorBoundary} from '~/components/error-boundary'
@@ -144,6 +144,12 @@ export default function NomineesPage() {
   const navigation = useNavigation()
   const loading = navigation.state === 'loading'
 
+  function submitting(intent: 'approve' | 'delete', nomineeId: number) {
+    const formIntent = navigation.formData?.get('intent')
+    const id = navigation.formData?.get('nomineeId')
+    return formIntent === intent && id === String(nomineeId)
+  }
+
   return (
     <div>
       <h1 className="mb-6 scroll-m-20 text-2xl font-extrabold lg:text-3xl">
@@ -210,7 +216,13 @@ export default function NomineesPage() {
                   value="approve"
                   variant="default"
                 >
-                  Approve
+                  {submitting('approve', n.id) ? (
+                    <>
+                      <Loader2 className="mr-2 animate-spin" /> Approving...
+                    </>
+                  ) : (
+                    'Approve'
+                  )}
                 </Button>
                 <Button
                   type="submit"
@@ -226,7 +238,13 @@ export default function NomineesPage() {
                   value="delete"
                   variant="destructive"
                 >
-                  Reject
+                  {submitting('delete', n.id) ? (
+                    <>
+                      <Loader2 className="mr-2 animate-spin" /> Rejecting...
+                    </>
+                  ) : (
+                    'Reject'
+                  )}
                 </Button>
               </Form>
             </CardFooter>

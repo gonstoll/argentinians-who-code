@@ -196,7 +196,7 @@ export default function Nominate() {
               defaultValue={fields.from.initialValue}
             >
               <SelectTrigger id={fields.from.id} className="w-full">
-                <SelectValue placeholder="Select a city" />
+                <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
                 {provinces.map(p => (
