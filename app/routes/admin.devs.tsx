@@ -27,7 +27,7 @@ import {
 } from '~/components/ui/card'
 import {db} from '~/db'
 import {devs, type Expertise} from '~/db/schema'
-import {classNames} from '~/utils/misc'
+import {classNames, md5} from '~/utils/misc'
 import {commitSession, destroySession, getSession} from '~/utils/session.server'
 import type {SiteHandle} from '~/utils/sitemap.server'
 
@@ -40,7 +40,7 @@ export function meta(): Array<MetaDescriptor> {
 }
 
 export function headers({loaderHeaders}: HeadersArgs) {
-  return {'Cache-Control': loaderHeaders.get('Cache-Control')}
+  return loaderHeaders
 }
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -58,10 +58,17 @@ export async function loader({request}: LoaderFunctionArgs) {
     )
     .orderBy(desc(devs.createdAt))
     .all()
+  const weakHash = md5(JSON.stringify(data))
+  const etag = request.headers.get('If-None-Match')
+  if (etag === weakHash) {
+    return new Response(null, {status: 304})
+  }
   const headers = {
+    ETag: weakHash,
     'Cache-Control': cacheHeader({
       public: true,
       maxAge: '3mins',
+      mustRevalidate: true,
       sMaxage: '3days',
       staleWhileRevalidate: '1year',
       staleIfError: '1year',

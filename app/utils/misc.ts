@@ -1,3 +1,6 @@
+import {createHash} from 'crypto'
+import {serverOnly$} from 'vite-env-only'
+
 /**
  * Does its best to get a string error message from an unknown error.
  */
@@ -38,3 +41,8 @@ export function getDomainUrl(request: Request) {
   const protocol = host.includes('localhost') ? 'http' : 'https'
   return `${protocol}://${host}`
 }
+
+function md5Hash(str: string) {
+  return createHash('md5').update(str).digest('hex')
+}
+export const md5 = serverOnly$(md5Hash)!
