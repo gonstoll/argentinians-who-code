@@ -1,3 +1,5 @@
+import {createHash} from 'crypto'
+
 /**
  * Does its best to get a string error message from an unknown error.
  */
@@ -37,4 +39,8 @@ export function getDomainUrl(request: Request) {
     new URL(request.url).host
   const protocol = host.includes('localhost') ? 'http' : 'https'
   return `${protocol}://${host}`
+}
+
+export function md5(str: string) {
+  return createHash('md5').update(str).digest('hex')
 }
