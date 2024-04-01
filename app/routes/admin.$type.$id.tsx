@@ -174,11 +174,14 @@ export async function action({request, params}: LoaderFunctionArgs) {
 
 export default function EditPage() {
   const {data} = useLoaderData<typeof loader>()
-  const params = useParams<{type: 'nominees' | 'devs'}>()
+  const params = useParams<{type: 'nominees' | 'devs'; id: string}>()
   const type = params.type === 'nominees' ? 'nominee' : 'dev'
   const actionData = useActionData<typeof action>()
   const navigation = useNavigation()
-  const submitting = navigation.state === 'submitting'
+  const submitting =
+    navigation.state === 'submitting' ||
+    (navigation.state === 'loading' &&
+      navigation.formAction === `/admin/${params.type}/${params.id}`)
   const showSpinner = useSpinDelay(submitting, {minDuration: 400})
   const [form, fields] = useForm({
     id: 'edit-form',
@@ -298,8 +301,13 @@ export default function EditPage() {
           <CardFooter>
             <input type="hidden" name="nomineeId" value={data.id} />
             <Button type="submit" variant="default">
-              {showSpinner ? <Loader2 className="mr-2 animate-spin" /> : null}
-              Submit
+              {showSpinner ? (
+                <>
+                  <Loader2 className="mr-2 animate-spin" /> Submitting...
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </CardFooter>
         </Card>

@@ -124,7 +124,7 @@ export async function action({request}: ActionFunctionArgs) {
         content: 'Nominee deleted successfully',
       })
       return json(null, {
-        status: 204,
+        status: 201,
         headers: {'set-cookie': await commitSession(session)},
       })
     }
