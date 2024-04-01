@@ -135,7 +135,7 @@ export async function action({request}: LoaderFunctionArgs) {
 
   session.flash('message', {
     type: 'success',
-    content: 'Nomination submitted successfully',
+    content: 'Nomination submitted successfully!',
   })
 
   return json(
@@ -160,7 +160,7 @@ export default function Nominate() {
 
   return (
     <section>
-      <Hero />
+      <Hero subtitle="Do you know a friend or colleague developer who deserves to be recognized? Nominate them here!" />
       <Form method="post" {...getFormProps(form)}>
         {form.errors?.length ? (
           <div className="mb-4">

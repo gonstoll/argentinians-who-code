@@ -8,12 +8,21 @@ export function meta(): Array<MetaDescriptor> {
 const content = [
   {
     title: 'What is it about?',
+    // content: (
+    //   <>
+    //     We want to give fellow Argentinian developers doing fantastic work a
+    //     place to showcase their work and to inspire others to follow their path.
+    //     We believe that by sharing their profiles, we can help others to see
+    //     that they can do it too.
+    //   </>
+    // ),
     content: (
       <>
-        We want to give fellow Argentinian developers doing fantastic work a
-        place to showcase their work and to inspire others to follow their path.
-        We believe that by sharing their profiles, we can help others to see
-        that they can do it too.
+        Argentina is home to a wealth of talented engineers whose contributions
+        often go unnoticed on a global scale. We wanted to change that by
+        creating a platform to showcase the remarkable work and expertise of
+        Argentine engineers across various domains. We believe that by sharing
+        their profiles, we can help others to see that they can do it too.
       </>
     ),
   },

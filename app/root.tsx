@@ -278,6 +278,7 @@ function Header({isAdmin = false}: {isAdmin: boolean}) {
         <ThemeSwitch />
         <NavLink
           to="/about"
+          prefetch="intent"
           className={({isActive}) =>
             classNames(buttonVariants({variant: 'link'}), {underline: isActive})
           }
@@ -286,6 +287,7 @@ function Header({isAdmin = false}: {isAdmin: boolean}) {
         </NavLink>
         <NavLink
           to="/nominate"
+          prefetch="intent"
           className={({isActive}) =>
             classNames(buttonVariants({variant: 'link'}), {underline: isActive})
           }
