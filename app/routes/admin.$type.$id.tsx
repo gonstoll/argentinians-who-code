@@ -38,7 +38,7 @@ import {
 } from '~/components/ui/select'
 import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
-import {devs, expertise, nominees, provinces} from '~/db/schema'
+import {devs, expertises, nominees, provinces} from '~/db/schema'
 import {commitSession, getSession} from '~/utils/session.server'
 import type {SiteHandle} from '~/utils/sitemap.server'
 import {schema} from './nominate'
@@ -256,7 +256,7 @@ export default function EditPage() {
                     <SelectValue placeholder="Select an area of expertise" />
                   </SelectTrigger>
                   <SelectContent>
-                    {expertise.map(p => (
+                    {expertises.map(p => (
                       <SelectItem key={p} value={p}>
                         <Badge variant={p}>• {p}</Badge>
                       </SelectItem>

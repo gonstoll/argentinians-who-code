@@ -34,7 +34,7 @@ import {
 } from '~/components/ui/select'
 import {Textarea} from '~/components/ui/textarea'
 import {db, rateLimit} from '~/db'
-import {expertise, nominees, provinces} from '~/db/schema'
+import {expertises, nominees, provinces} from '~/db/schema'
 import {commitSession, getSession} from '~/utils/session.server'
 
 export function meta(): Array<MetaDescriptor> {
@@ -49,7 +49,7 @@ export const schema = z.object({
   from: z.enum(provinces, {
     required_error: 'Please select a province where the nominee is from',
   }),
-  expertise: z.enum(expertise, {
+  expertise: z.enum(expertises, {
     required_error: 'Please select an area of expertise',
   }),
   link: z
@@ -219,7 +219,7 @@ export default function Nominate() {
                 <SelectValue placeholder="Select an area of expertise" />
               </SelectTrigger>
               <SelectContent>
-                {expertise.map(p => (
+                {expertises.map(p => (
                   <SelectItem key={p} value={p}>
                     <Badge variant={p}>• {p}</Badge>
                   </SelectItem>

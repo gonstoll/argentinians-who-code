@@ -1,7 +1,7 @@
 import {sql, type InferSelectModel} from 'drizzle-orm'
 import {integer, sqliteTable, text} from 'drizzle-orm/sqlite-core'
 
-export const expertise = ['frontend', 'backend', 'fullstack', 'qa'] as const
+export const expertises = ['frontend', 'backend', 'fullstack', 'qa'] as const
 export const provinces = [
   'Buenos Aires',
   'Buenos Aires Capital Federal',
@@ -35,7 +35,7 @@ const commonColumns = {
     .notNull(),
   name: text('name').notNull(),
   from: text('from', {enum: provinces}).notNull(),
-  expertise: text('expertise', {enum: expertise}).notNull(),
+  expertise: text('expertise', {enum: expertises}).notNull(),
   link: text('link', {length: 200}).notNull(),
   reason: text('reason', {length: 300}).notNull(),
   createdAt: text('createdAt')
@@ -55,4 +55,4 @@ export const users = sqliteTable('users', {
 
 export type Dev = InferSelectModel<typeof devs>
 export type Nominee = InferSelectModel<typeof nominees>
-export type Expertise = (typeof expertise)[number]
+export type Expertise = (typeof expertises)[number]

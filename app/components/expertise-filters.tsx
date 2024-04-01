@@ -1,6 +1,6 @@
 import {useSearchParams} from '@remix-run/react'
 import {ListFilter} from 'lucide-react'
-import {expertise, type Expertise} from '~/db/schema'
+import {expertises, type Expertise} from '~/db/schema'
 import {cn} from '~/lib/utils'
 import {Badge} from './ui/badge'
 import {
@@ -14,7 +14,6 @@ import {
 
 export function ExpertiseFilters({className}: {className?: string}) {
   const [searchParams, setSearchParams] = useSearchParams()
-  // TODO: Change this name once expertise array is renamed
   const activeExpertises = searchParams.getAll('expertise')
 
   function handleFilter(expertise: Expertise[number]) {
@@ -40,7 +39,7 @@ export function ExpertiseFilters({className}: {className?: string}) {
       <DropdownMenuContent>
         <DropdownMenuLabel>Filter by</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {expertise.map(e => (
+        {expertises.map(e => (
           <DropdownMenuCheckboxItem
             key={e}
             checked={activeExpertises.includes(e)}

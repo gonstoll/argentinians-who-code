@@ -3,7 +3,7 @@ import {createClient} from '@libsql/client'
 import bcrypt from 'bcryptjs'
 import * as dotenv from 'dotenv'
 import {drizzle} from 'drizzle-orm/libsql'
-import {devs, expertise, nominees, provinces, users, type Dev} from './schema'
+import {devs, expertises, nominees, provinces, users, type Dev} from './schema'
 
 dotenv.config()
 
@@ -20,7 +20,7 @@ function generateDev(): Omit<Dev, 'id'> {
     .join(' ')
   return {
     name: faker.person.fullName(),
-    expertise: faker.helpers.arrayElement(expertise),
+    expertise: faker.helpers.arrayElement(expertises),
     from: faker.helpers.arrayElement(provinces),
     link: faker.internet.url(),
     createdAt: faker.date.recent().toISOString(),
