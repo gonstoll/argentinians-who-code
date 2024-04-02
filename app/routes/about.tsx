@@ -9,70 +9,42 @@ const content = [
   {
     title: 'What is it about?',
     content: (
-      <>
+      <p>
         We want to give fellow Argentinian developers doing fantastic work a
         place to showcase their work and to inspire others to follow their path.
         We believe that by sharing their profiles, we can help others to see
         that they can do it too.
-      </>
-    ),
-  },
-  {
-    title: 'How can I nominate someone?',
-    content: (
-      <>
-        You can nominate someone by filling out the form on the{' '}
-        <Link to="/nominate" className="underline underline-offset-4">
-          nominate
-        </Link>{' '}
-        page.
-      </>
-    ),
-  },
-  {
-    title: 'How can I remove my name?',
-    content: (
-      <>
-        If you have been nominated and would like to remove your name from the
-        website, please contact us at{' '}
-        <a
-          href="mailto:hola@argentinianswhodesign.dev?subject=Remove%20my%20profile"
-          target="_blank"
-          rel="noreferrer"
-          className="underline underline-offset-4"
-        >
-          hola@argentinianswhodesign.dev
-        </a>{' '}
-        and we will remove your profile.
-      </>
+      </p>
     ),
   },
   {
     title: 'How did we come up with this idea?',
     content: (
       <>
-        We had a lot of inspiration from other websites doing something similar,
-        such as{' '}
-        <a
-          href="https://argentinianswho.design"
-          className="underline underline-offset-4"
-          target="_blank"
-          rel="noreferrer"
-        >
-          argentinianswho.desgin
-        </a>
-        , which is a forked project from{' '}
-        <a
-          href="https://brazilianswho.design"
-          className="underline underline-offset-4"
-          target="_blank"
-          rel="noreferrer"
-        >
-          brazilianswho.design
-        </a>
-        . We thought the developer community deserved a similar space to
-        showcase their work.
-        <span className="mt-2 block">
+        <p>
+          We had a lot of inspiration from other websites doing something
+          similar, such as{' '}
+          <a
+            href="https://argentinianswho.design"
+            className="underline underline-offset-4"
+            target="_blank"
+            rel="noreferrer"
+          >
+            argentinianswho.design
+          </a>
+          , which is a forked project from{' '}
+          <a
+            href="https://brazilianswho.design"
+            className="underline underline-offset-4"
+            target="_blank"
+            rel="noreferrer"
+          >
+            brazilianswho.design
+          </a>
+          . We thought the developer community deserved a similar space to
+          showcase their work.
+        </p>
+        <p>
           This project is{' '}
           <a
             href="https://github.com/gonstoll/argentinians-who-code"
@@ -84,14 +56,44 @@ const content = [
           </a>
           . We not only support, but also encourage other people to fork it and
           create similar places for their own communities.
-        </span>
+        </p>
       </>
+    ),
+  },
+  {
+    title: 'How can I nominate someone?',
+    content: (
+      <p>
+        You can nominate someone by filling out the form on the{' '}
+        <Link to="/nominate" className="underline underline-offset-4">
+          nominate
+        </Link>{' '}
+        page.
+      </p>
+    ),
+  },
+  {
+    title: 'How can I remove my name?',
+    content: (
+      <p>
+        If you have been nominated and would like to remove your name from the
+        website, please contact us at{' '}
+        <a
+          href="mailto:hola@argentinianswhodesign.dev?subject=Remove%20my%20profile"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-4"
+        >
+          hola@argentinianswhodesign.dev
+        </a>{' '}
+        and we will remove your profile.
+      </p>
     ),
   },
   {
     title: "Who's behind this?",
     content: (
-      <>
+      <p>
         Argentinians Who Code (AWC) was created and brought to you by{' '}
         <a
           href="https://gonzalostoll.com"
@@ -121,13 +123,13 @@ const content = [
           send us a coffee
         </a>
         !
-      </>
+      </p>
     ),
   },
   {
     title: 'Any other questions or suggestions?',
     content: (
-      <>
+      <p>
         We welcome critisism, questions and suggestions with open arms! Feel
         absolutely free to shoot us an email at{' '}
         <a
@@ -139,7 +141,7 @@ const content = [
           hola@argentinianswhocode.dev
         </a>
         . We read every email and will get back to you as soon as possible.
-      </>
+      </p>
     ),
   },
 ]
@@ -153,7 +155,7 @@ export default function About() {
         {content.map((c, i) => (
           <div key={i} className="mb-16 break-inside-avoid space-y-3 last:mb-0">
             <h2>{c.title}</h2>
-            <p>{c.content}</p>
+            <div className="space-y-1.5">{c.content}</div>
           </div>
         ))}
       </div>
