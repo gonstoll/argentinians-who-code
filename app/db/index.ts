@@ -10,6 +10,6 @@ const client = createClient({
 export const db = drizzle(client)
 export const rateLimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(1, '10 s'),
+  limiter: Ratelimit.slidingWindow(10, '10 s'),
   analytics: true,
 })
