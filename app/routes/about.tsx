@@ -84,7 +84,7 @@ const content = [
           rel="noreferrer"
           className="underline underline-offset-4"
         >
-          hola@argentinianswhodesign.dev
+          hola@argentinianswhocode.dev
         </a>{' '}
         and we will remove your profile.
       </p>
