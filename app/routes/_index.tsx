@@ -121,7 +121,9 @@ export default function Index() {
   return (
     <section>
       <Hero />
-      <div className={classNames({'opacity-40': showSpinner})}>
+      <div
+        className={classNames({'pointer-events-none opacity-40': showSpinner})}
+      >
         <DataTable data={data} />
       </div>
     </section>
