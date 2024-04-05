@@ -1,5 +1,5 @@
 import {json, type HeadersArgs, type LoaderFunctionArgs} from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
+import {useLoaderData, useNavigation} from '@remix-run/react'
 import {
   flexRender,
   getCoreRowModel,
@@ -12,6 +12,7 @@ import {desc, inArray} from 'drizzle-orm'
 import {ArrowUpDown, ArrowUpRight} from 'lucide-react'
 import {cacheHeader} from 'pretty-cache-header'
 import * as React from 'react'
+import {useSpinDelay} from 'spin-delay'
 import {ExpertiseFilters} from '~/components/expertise-filters'
 import {Hero} from '~/components/hero'
 import {Badge} from '~/components/ui/badge'
@@ -26,7 +27,7 @@ import {
 import {db} from '~/db'
 import type {Dev} from '~/db/schema'
 import {devs, type Expertise} from '~/db/schema'
-import {md5} from '~/utils/misc'
+import {classNames, md5} from '~/utils/misc'
 
 type UserDev = Omit<Dev, 'reason' | 'createdAt'>
 export const columns: Array<ColumnDef<UserDev>> = [
@@ -112,11 +113,17 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Index() {
   const {data} = useLoaderData<typeof loader>()
+  const navigation = useNavigation()
+  const loading =
+    navigation.state === 'loading' && navigation.location.pathname === '/'
+  const showSpinner = useSpinDelay(loading, {minDuration: 400})
 
   return (
     <section>
       <Hero />
-      <DataTable data={data} />
+      <div className={classNames({'opacity-40': showSpinner})}>
+        <DataTable data={data} />
+      </div>
     </section>
   )
 }

@@ -195,7 +195,7 @@ export default function Nominate() {
               {...getSelectProps(fields.from)}
               defaultValue={fields.from.initialValue}
             >
-              <SelectTrigger id={fields.from.id} className="w-full">
+              <SelectTrigger id={fields.from.id} className="w-full text-left">
                 <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
@@ -215,7 +215,10 @@ export default function Nominate() {
               {...getSelectProps(fields.expertise)}
               defaultValue={fields.expertise.initialValue}
             >
-              <SelectTrigger id={fields.expertise.id} className="w-full">
+              <SelectTrigger
+                id={fields.expertise.id}
+                className="w-full text-left"
+              >
                 <SelectValue placeholder="Select an area of expertise" />
               </SelectTrigger>
               <SelectContent>
