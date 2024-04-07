@@ -95,13 +95,13 @@ export async function loader({request}: LoaderFunctionArgs) {
   const weakHash = md5(JSON.stringify(data))
   const etag = request.headers.get('If-None-Match')
   if (etag === weakHash) {
-    return new Response(null, {status: 304})
+    return json('' as unknown as {data: typeof data}, {status: 304})
   }
   const headers = {
     ETag: weakHash,
     'Cache-Control': cacheHeader({
       public: true,
-      maxAge: '3mins',
+      maxAge: '0secs',
       mustRevalidate: true,
       sMaxage: '3days',
       staleWhileRevalidate: '1year',
